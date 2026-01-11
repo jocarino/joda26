@@ -1,0 +1,296 @@
+# Cursor Rules for Wedding Website Project
+
+## Project Overview
+
+This is a Next.js 14 wedding website with code-based access control, Airtable integration, and multi-location support (Lagos, London, Portugal).
+
+## Code Style & Formatting
+
+### Quotes
+
+- Use double quotes (`"`) for strings consistently
+- Use single quotes only for specific cases (e.g., SQL queries, if needed)
+
+### TypeScript
+
+- Use strict TypeScript with explicit types
+- Prefer interfaces over types for object shapes
+- Use type unions for constrained values (e.g., `Location = 'Lagos' | 'London' | 'Portugal'`)
+- Always type function parameters and return types
+
+### Naming Conventions
+
+- Components: PascalCase (e.g., `LagosContent.tsx`, `RSVPForm.tsx`)
+- Files: kebab-case for utilities, PascalCase for components
+- Functions: camelCase
+- Constants: UPPER_SNAKE_CASE for environment variables, camelCase for code constants
+- API routes: kebab-case directories (e.g., `generate-code/route.ts`)
+
+## Project Structure
+
+### File Organization
+
+```
+/app                    # Next.js App Router pages and API routes
+  /api                  # API endpoints
+  /admin                # Admin pages
+/components             # React components
+  /locations            # Location-specific content components
+/lib                    # Utility functions and integrations
+/types                  # TypeScript type definitions
+```
+
+### Component Patterns
+
+- Use `'use client'` directive for client components that use hooks
+- Server components by default (no directive needed)
+- Keep components focused and single-purpose
+- Extract reusable logic to `/lib` utilities
+
+## Key Patterns
+
+### Airtable Integration
+
+- Always use Personal Access Tokens (PAT), not API keys
+- Field names in Airtable must match exactly (case-sensitive)
+- Always handle Airtable API errors gracefully with helpful messages
+- Use `filterByFormula` with proper URL encoding for queries
+- Normalize codes to uppercase before querying
+- `plus_one_names` field: Use Long text field type, store as comma-separated string
+- `allowed_plus_ones` field: Use Number field type in Guests table
+- When updating RSVPs, check for existing RSVP by `invite_code` and `location` before creating
+- Use `updateRSVP()` function to update existing records instead of creating duplicates
+
+### Code Generation
+
+- Use `nanoid` with custom alphabet: `ABCDEFGHJKLMNPQRSTUVWXYZ23456789`
+- Exclude confusing characters: 0, O, 1, I
+- Codes are 8 characters long
+- Always check for uniqueness before saving
+
+### Error Handling
+
+- Provide user-friendly error messages
+- Log errors to console for debugging (use `console.error` or `console.log`)
+- Handle Airtable API errors with specific messages for missing fields
+- Use try-catch blocks for async operations
+- Return appropriate HTTP status codes in API routes
+
+### Date Handling
+
+- Create dates using `new Date(year, month, day)` for local timezone (month is 0-indexed)
+- Pass timestamps (`getTime()`) to client components to avoid serialization issues
+- Set countdown target dates to start of day (00:00:00)
+
+### Validation
+
+- Validate code format: `/^[A-Z2-9]{8}$/` (8 chars, uppercase, no 0/O/1/I)
+- Normalize codes to uppercase before validation
+- Implement rate limiting for code validation (10 attempts per 15 min per IP)
+- Validate on both client and server side
+
+## Styling
+
+### Tailwind CSS
+
+- Use Tailwind utility classes
+- Custom fonts: Playfair Display (serif) for headings, Inter (sans-serif) for body
+- Maintain minimalist, elegant design matching wedding theme
+- Use grayscale filters for images with hover effects
+- Responsive design: mobile-first with `md:` breakpoints
+
+### Typography
+
+- Headings: `font-serif font-normal` (Playfair Display)
+- Body text: `font-light` (Inter)
+- Date displays: `font-sans font-bold` (large, bold numbers)
+- Uppercase text: `uppercase tracking-wider` or `tracking-widest`
+- Letter spacing: Use `tracking-wide`, `tracking-wider`, `tracking-widest` appropriately
+
+## API Routes
+
+### Authentication
+
+- Use Bearer token authentication for admin routes
+- Check `ADMIN_PASSWORD` from environment variables
+- Return 401 for unauthorized requests
+
+### Response Format
+
+- Success: `{ success: true }` or `{ guest: {...} }` etc.
+- Errors: `{ error: "Error message" }` with appropriate status codes
+- Always use `NextResponse.json()` for responses
+
+## Environment Variables
+
+Required variables:
+
+- `AIRTABLE_PERSONAL_ACCESS_TOKEN`
+- `AIRTABLE_BASE_ID`
+- `AIRTABLE_GUESTS_TABLE` (default: "Guests")
+- `AIRTABLE_RSVPS_TABLE` (default: "RSVPs")
+- `NEXT_PUBLIC_SITE_URL`
+- `ADMIN_PASSWORD`
+- `RATE_LIMIT_MAX_ATTEMPTS` (default: 10)
+- `RATE_LIMIT_WINDOW_MS` (default: 900000)
+
+## Component Guidelines
+
+### Location Components
+
+- Each location (Lagos, London, Portugal) has its own content component
+- Include: Date & Images, Location & Time, Getting There, RSVP, Countdown, Registry
+- Location-specific sections (e.g., Colour Code for Lagos, Accommodation for Portugal)
+- Pass `inviteCode` and `guest` props when available
+
+### Forms
+
+- Use controlled components with `useState`
+- Show loading states during submission
+- Display success/error messages clearly
+- Reset forms after successful submission (only for simple forms without codes)
+- For coded RSVPs, re-fetch and repopulate form data after submission
+- Validate required fields before submission
+- Pre-fill form data when existing RSVP is found
+- Make name field read-only/disabled when `inviteCode` exists
+- Submit button text: "Update RSVP" when updating existing RSVP, "Submit RSVP" for new submissions
+
+### Countdown Component
+
+- Client component (`'use client'`)
+- Handle hydration with `mounted` state
+- Update every second with `setInterval`
+- Display numbers without leading zeros
+- Format: Days, Hours, Minutes, Seconds
+
+## Testing & Debugging
+
+### Console Logging
+
+- Use `console.log` for debugging information (development only)
+- Use `console.error` for errors
+- Include context in log messages (e.g., code, guest name)
+- Remove or conditionally log in production
+
+### Error Messages
+
+- Provide specific, actionable error messages
+- Include field names when Airtable fields are missing
+- Guide users on how to fix issues
+
+## Security
+
+### Code Validation
+
+- Server-side validation is required
+- Rate limiting prevents brute force attacks
+- Codes are cryptographically secure (nanoid)
+- Never expose sensitive data in client-side code
+
+### Admin Access
+
+- Protect admin routes with password authentication
+- Store admin password in environment variables
+- Use sessionStorage for client-side auth state (simple implementation)
+
+## Best Practices
+
+1. **Always validate input** on both client and server
+2. **Handle errors gracefully** with user-friendly messages
+3. **Log errors** for debugging but don't expose sensitive info
+4. **Use TypeScript types** to catch errors early
+5. **Keep components small** and focused
+6. **Extract reusable logic** to utility functions
+7. **Follow existing patterns** when adding new features
+8. **Test with real Airtable data** when possible
+9. **Consider timezone issues** when working with dates
+10. **Maintain consistent styling** with the minimalist wedding theme
+
+## Common Patterns
+
+### Fetching from Airtable
+
+```typescript
+const data = await airtableRequest(
+  `/${TABLE}?filterByFormula=${encodeURIComponent(formula)}`
+);
+```
+
+### Creating Records
+
+```typescript
+await airtableRequest(`/${TABLE}`, {
+  method: 'POST',
+  body: JSON.stringify({ fields: {...} }),
+});
+```
+
+### Updating Records
+
+```typescript
+await airtableRequest(`/${TABLE}/${recordId}`, {
+  method: 'PATCH',
+  body: JSON.stringify({ fields: {...} }),
+});
+```
+
+### Fetching Existing RSVP
+
+```typescript
+const rsvp = await getRSVPByCodeAndLocation(inviteCode, location);
+if (rsvp) {
+  // Pre-fill form with existing data
+}
+```
+
+### Client Component Pattern
+
+```typescript
+"use client";
+import { useState, useEffect } from "react";
+// component code
+```
+
+### Server Component Pattern
+
+```typescript
+// No directive needed
+import { fetchGuestByCode } from "@/lib/airtable";
+// component code
+```
+
+## Plus Ones Feature
+
+### Guest Configuration
+
+- `allowed_plus_ones` field in Guests table (Number field type)
+- If not set or 0: Plus one fields are hidden
+- If set to N (e.g., 2): Shows dropdown with options 0 to N
+- Only show "Number of Guests" field when `allowed_plus_ones > 0`
+
+### RSVP Form Behavior
+
+- When `allowed_plus_ones` is set: Show "Number of Guests" dropdown (0 to max allowed)
+- When number > 0 selected: Show that many name input fields
+- Store plus one names as comma-separated string in Airtable Long text field
+- Parse comma-separated string back to array when reading from Airtable
+- Only send non-empty plus one names to API
+
+### RSVP Update Logic
+
+- When guest submits RSVP with invite code:
+  - Fetch existing RSVP by `invite_code` and `location`
+  - Pre-fill form with existing data if found
+  - Make name field read-only/disabled (grayed out)
+  - Update existing RSVP instead of creating duplicate
+  - Re-fetch RSVP after submission to show updated data
+  - Button text: "Update RSVP" when updating, "Submit RSVP" for new submissions
+
+## Notes
+
+- Wedding dates: Lagos (March 27, 2026), London (April 25, 2026), Portugal (May 2, 2026)
+- Couple names: Damola & João
+- Default location: Lagos (shown when no code provided)
+- Simple RSVP: Name only (for default Lagos view)
+- Full RSVP: Includes guests, dietary restrictions, visa requirements (for coded access)
+- RSVP updates: Check for existing RSVP before creating to prevent duplicates

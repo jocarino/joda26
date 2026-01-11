@@ -1,0 +1,85 @@
+"use client";
+
+import { useState } from "react";
+import LagosContent from "@/components/locations/LagosContent";
+import LondonContent from "@/components/locations/LondonContent";
+import PortugalContent from "@/components/locations/PortugalContent";
+import { Location, Guest } from "@/types/rsvp";
+
+interface MultiLocationContentProps {
+  allowedLocations: Location[];
+  inviteCode: string;
+  guest: Guest;
+  initialLocation?: string;
+}
+
+const locationNames: Record<Location, string> = {
+  Lagos: "Lagos",
+  London: "London",
+  Portugal: "Portugal",
+};
+
+export default function MultiLocationContent({
+  allowedLocations,
+  inviteCode,
+  guest,
+  initialLocation,
+}: MultiLocationContentProps) {
+  // Determine initial location: use URL param if valid, otherwise first allowed location
+  const getInitialLocation = (): Location => {
+    if (
+      initialLocation &&
+      ["Lagos", "London", "Portugal"].includes(initialLocation) &&
+      allowedLocations.includes(initialLocation as Location)
+    ) {
+      return initialLocation as Location;
+    }
+    return allowedLocations[0];
+  };
+
+  const [activeLocation, setActiveLocation] = useState<Location>(
+    getInitialLocation()
+  );
+
+  const renderLocationContent = (location: Location) => {
+    switch (location) {
+      case "Lagos":
+        return <LagosContent inviteCode={inviteCode} guest={guest} />;
+      case "London":
+        return <LondonContent inviteCode={inviteCode} guest={guest} />;
+      case "Portugal":
+        return <PortugalContent inviteCode={inviteCode} guest={guest} />;
+    }
+  };
+
+  return (
+    <div className="min-h-screen">
+      {/* Location Tabs */}
+      {allowedLocations.length > 1 && (
+        <section className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="flex justify-center gap-2 md:gap-4 overflow-x-auto">
+              {allowedLocations.map((location) => (
+                <button
+                  key={location}
+                  onClick={() => setActiveLocation(location)}
+                  className={`px-6 py-4 text-sm uppercase tracking-wider transition-colors whitespace-nowrap ${
+                    activeLocation === location
+                      ? "border-b-2 border-black font-semibold"
+                      : "text-gray-600 hover:text-black"
+                  }`}
+                >
+                  {locationNames[location]}
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Active Location Content */}
+      <div key={activeLocation}>{renderLocationContent(activeLocation)}</div>
+    </div>
+  );
+}
+
