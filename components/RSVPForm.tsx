@@ -179,6 +179,7 @@ export default function RSVPForm({
                 setExistingRSVPId(rsvp.id);
                 setFormData({
                   name: rsvp.name || guest?.name || "",
+                  phone_number: rsvp.phone_number || "",
                   attending: rsvp.attending !== false,
                   dietary_restrictions: rsvp.dietary_restrictions || "",
                   visa_required: rsvp.visa_required || false,
@@ -442,8 +443,7 @@ export default function RSVPForm({
       <button
         type="submit"
         disabled={
-          submitting ||
-          (!simple && (!formData.name || !formData.phone_number))
+          submitting || (!simple && (!formData.name || !formData.phone_number))
         }
         className="w-full px-6 py-3 border border-black hover:bg-black hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider text-sm"
       >

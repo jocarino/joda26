@@ -22,7 +22,7 @@ export default function HeroSection({
               <h1 className="text-5xl md:text-7xl font-serif mb-2 tracking-tight font-normal text-white drop-shadow-lg">
                 DAMOLA & JOÃO
               </h1>
-              <div className="text-md md:text-lg uppercase tracking-wider font-sans text-white drop-shadow-lg">
+              <div className="text-md md:text-lg uppercase tracking-wider font-medium font-sans text-white drop-shadow-lg">
                 {date}
               </div>
             </div>
