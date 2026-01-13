@@ -18,7 +18,19 @@ export default function RSVPForm({
 }: RSVPFormProps) {
   // Only show plus ones if explicitly set and greater than 0
   // Handle undefined, null, 0, empty string, or any falsy value
-  const allowedPlusOnes = guest?.allowed_plus_ones;
+  const allowedPlusOnes = (() => {
+    if (!guest) return undefined;
+
+    const locationSpecific =
+      location === "Lagos"
+        ? guest.allowed_plus_ones_lagos
+        : location === "London"
+        ? guest.allowed_plus_ones_london
+        : guest.allowed_plus_ones_portugal;
+
+    // Prefer location-specific value; fall back to global allowed_plus_ones
+    return locationSpecific ?? guest.allowed_plus_ones;
+  })();
   const maxPlusOnes =
     allowedPlusOnes !== undefined &&
     allowedPlusOnes !== null &&

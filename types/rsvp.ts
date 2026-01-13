@@ -1,4 +1,4 @@
-export type Location = 'Lagos' | 'London' | 'Portugal';
+export type Location = "Lagos" | "London" | "Portugal";
 
 export interface Guest {
   id: string;
@@ -8,7 +8,16 @@ export interface Guest {
   allowed_locations: Location[];
   code_generated_at?: string;
   unique_link?: string;
+  /**
+   * Global fallback (used when location-specific values are not set).
+   */
   allowed_plus_ones?: number;
+  /**
+   * Location-specific max plus ones (preferred).
+   */
+  allowed_plus_ones_lagos?: number;
+  allowed_plus_ones_london?: number;
+  allowed_plus_ones_portugal?: number;
 }
 
 export interface RSVP {
@@ -34,6 +43,9 @@ export interface AirtableGuestRecord {
     allowed_locations?: string[];
     code_generated_at?: string;
     allowed_plus_ones?: number;
+    allowed_plus_ones_lagos?: number;
+    allowed_plus_ones_london?: number;
+    allowed_plus_ones_portugal?: number;
   };
 }
 

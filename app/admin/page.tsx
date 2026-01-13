@@ -1,25 +1,34 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Guest, RSVP, Location } from '@/types/rsvp';
+import { useState, useEffect } from "react";
+import { Guest, RSVP, Location } from "@/types/rsvp";
 
 export default function AdminPage() {
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
   const [guests, setGuests] = useState<Guest[]>([]);
   const [rsvps, setRsvps] = useState<RSVP[]>([]);
   const [loading, setLoading] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState<Location | 'all'>('all');
+  const [selectedLocation, setSelectedLocation] = useState<Location | "all">(
+    "all"
+  );
   const [generatingCode, setGeneratingCode] = useState<string | null>(null);
 
   useEffect(() => {
     // Check if already authenticated (stored in sessionStorage)
-    const auth = sessionStorage.getItem('admin_authenticated');
-    if (auth === 'true') {
+    const auth = sessionStorage.getItem("admin_authenticated");
+    if (auth === "true") {
       setAuthenticated(true);
       loadData();
     }
   }, []);
+
+  useEffect(() => {
+    if (!authenticated) return;
+    // When switching location, refetch RSVPs server-side so each location is truly separated
+    loadRSVPs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedLocation, authenticated]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,20 +36,44 @@ export default function AdminPage() {
     // For now, using a simple client-side check
     // The actual password should be verified server-side
     try {
-      const response = await fetch('/api/admin/guests', {
-        headers: { 'Authorization': `Bearer ${password}` },
+      const response = await fetch("/api/admin/guests", {
+        headers: { Authorization: `Bearer ${password}` },
       });
       
       if (response.ok) {
         setAuthenticated(true);
-        sessionStorage.setItem('admin_authenticated', 'true');
-        sessionStorage.setItem('admin_password', password);
+        sessionStorage.setItem("admin_authenticated", "true");
+        sessionStorage.setItem("admin_password", password);
         loadData();
       } else {
-        alert('Invalid password');
+        alert("Invalid password");
       }
     } catch (error) {
-      alert('Login failed');
+      alert("Login failed");
+    }
+  };
+
+  const loadRSVPs = async () => {
+    setLoading(true);
+    try {
+      const storedPassword = sessionStorage.getItem("admin_password") || "";
+      const locationQuery =
+        selectedLocation === "all"
+          ? ""
+          : `?location=${encodeURIComponent(selectedLocation)}`;
+
+      const rsvpsRes = await fetch(`/api/admin/rsvps${locationQuery}`, {
+        headers: { Authorization: `Bearer ${storedPassword}` },
+      });
+
+      if (rsvpsRes.ok) {
+        const rsvpsData = await rsvpsRes.json();
+        setRsvps(rsvpsData.rsvps || []);
+      }
+    } catch (error) {
+      console.error("Error loading RSVPs:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,14 +81,18 @@ export default function AdminPage() {
     setLoading(true);
     try {
       // Get password from sessionStorage or prompt
-      const storedPassword = sessionStorage.getItem('admin_password') || '';
+      const storedPassword = sessionStorage.getItem("admin_password") || "";
+      const locationQuery =
+        selectedLocation === "all"
+          ? ""
+          : `?location=${encodeURIComponent(selectedLocation)}`;
       
       const [guestsRes, rsvpsRes] = await Promise.all([
-        fetch('/api/admin/guests', {
-          headers: { 'Authorization': `Bearer ${storedPassword}` },
+        fetch("/api/admin/guests", {
+          headers: { Authorization: `Bearer ${storedPassword}` },
         }),
-        fetch('/api/admin/rsvps', {
-          headers: { 'Authorization': `Bearer ${storedPassword}` },
+        fetch(`/api/admin/rsvps${locationQuery}`, {
+          headers: { Authorization: `Bearer ${storedPassword}` },
         }),
       ]);
 
@@ -69,7 +106,7 @@ export default function AdminPage() {
         setRsvps(rsvpsData.rsvps || []);
       }
     } catch (error) {
-      console.error('Error loading data:', error);
+      console.error("Error loading data:", error);
     } finally {
       setLoading(false);
     }
@@ -77,38 +114,40 @@ export default function AdminPage() {
 
   const generateCode = async (recordId: string) => {
     setGeneratingCode(recordId);
-    console.log('[Admin] Generating code for recordId:', recordId);
+    console.log("[Admin] Generating code for recordId:", recordId);
     
     try {
-      const storedPassword = sessionStorage.getItem('admin_password') || '';
-      console.log('[Admin] Making request to /api/generate-code');
+      const storedPassword = sessionStorage.getItem("admin_password") || "";
+      console.log("[Admin] Making request to /api/generate-code");
       
-      const response = await fetch('/api/generate-code', {
-        method: 'POST',
+      const response = await fetch("/api/generate-code", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${storedPassword}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedPassword}`,
         },
         body: JSON.stringify({ recordId }),
       });
 
-      console.log('[Admin] Response status:', response.status);
+      console.log("[Admin] Response status:", response.status);
 
       if (response.ok) {
         const data = await response.json();
-        console.log('[Admin] Code generated successfully:', data);
+        console.log("[Admin] Code generated successfully:", data);
         await loadData();
       } else {
         const errorData = await response.json().catch(() => ({}));
-        const errorMessage = errorData.error || `Failed to generate code (Status: ${response.status})`;
-        console.error('[Admin] Error response:', errorData);
-        console.error('[Admin] Error message:', errorMessage);
+        const errorMessage =
+          errorData.error ||
+          `Failed to generate code (Status: ${response.status})`;
+        console.error("[Admin] Error response:", errorData);
+        console.error("[Admin] Error message:", errorMessage);
         alert(`Failed to generate code: ${errorMessage}`);
       }
     } catch (error: any) {
-      console.error('[Admin] Error generating code:', error);
-      console.error('[Admin] Error details:', error.message, error.stack);
-      alert(`Failed to generate code: ${error.message || 'Unknown error'}`);
+      console.error("[Admin] Error generating code:", error);
+      console.error("[Admin] Error details:", error.message, error.stack);
+      alert(`Failed to generate code: ${error.message || "Unknown error"}`);
     } finally {
       setGeneratingCode(null);
     }
@@ -116,7 +155,7 @@ export default function AdminPage() {
 
   const copyLink = (link: string) => {
     navigator.clipboard.writeText(link);
-    alert('Link copied to clipboard!');
+    alert("Link copied to clipboard!");
   };
 
   const exportToCSV = (data: any[], filename: string) => {
@@ -141,9 +180,8 @@ export default function AdminPage() {
     window.URL.revokeObjectURL(url);
   };
 
-  const filteredRSVPs = selectedLocation === 'all' 
-    ? rsvps 
-    : rsvps.filter(rsvp => rsvp.location === selectedLocation);
+  // RSVPs are now filtered server-side via /api/admin/rsvps?location=...
+  const filteredRSVPs = rsvps;
 
   if (!authenticated) {
     return (
@@ -216,9 +254,13 @@ export default function AdminPage() {
                   {guests.map((guest) => (
                     <tr key={guest.id} className="border-b border-gray-100">
                       <td className="py-2">{guest.name}</td>
-                      <td className="py-2">{guest.email || '-'}</td>
-                      <td className="py-2 font-mono">{guest.invite_code || '-'}</td>
-                      <td className="py-2">{guest.allowed_locations.join(', ') || '-'}</td>
+                      <td className="py-2">{guest.email || "-"}</td>
+                      <td className="py-2 font-mono">
+                        {guest.invite_code || "-"}
+                      </td>
+                      <td className="py-2">
+                        {guest.allowed_locations.join(", ") || "-"}
+                      </td>
                       <td className="py-2">
                         {guest.unique_link ? (
                           <button
@@ -228,7 +270,7 @@ export default function AdminPage() {
                             Copy Link
                           </button>
                         ) : (
-                          '-'
+                          "-"
                         )}
                       </td>
                       <td className="py-2">
@@ -238,7 +280,9 @@ export default function AdminPage() {
                             disabled={generatingCode === guest.id}
                             className="text-blue-600 hover:underline text-xs disabled:opacity-50"
                           >
-                            {generatingCode === guest.id ? 'Generating...' : 'Generate Code'}
+                            {generatingCode === guest.id
+                              ? "Generating..."
+                              : "Generate Code"}
                           </button>
                         )}
                       </td>
@@ -257,7 +301,9 @@ export default function AdminPage() {
             <div className="flex gap-4 items-center">
               <select
                 value={selectedLocation}
-                onChange={(e) => setSelectedLocation(e.target.value as Location | 'all')}
+                onChange={(e) =>
+                  setSelectedLocation(e.target.value as Location | "all")
+                }
                 className="px-4 py-2 border border-gray-300 focus:outline-none focus:border-black"
               >
                 <option value="all">All Locations</option>
@@ -266,7 +312,9 @@ export default function AdminPage() {
                 <option value="Portugal">Portugal</option>
               </select>
               <button
-                onClick={() => exportToCSV(filteredRSVPs, `rsvps-${selectedLocation}.csv`)}
+                onClick={() =>
+                  exportToCSV(filteredRSVPs, `rsvps-${selectedLocation}.csv`)
+                }
                 className="px-4 py-2 border border-black hover:bg-black hover:text-white transition-colors uppercase text-sm"
               >
                 Export CSV
@@ -296,11 +344,19 @@ export default function AdminPage() {
                       <td className="py-2">{rsvp.name}</td>
                       <td className="py-2">{rsvp.location}</td>
                       <td className="py-2">{rsvp.guests}</td>
-                      <td className="py-2">{rsvp.attending ? 'Yes' : 'No'}</td>
-                      <td className="py-2">{rsvp.dietary_restrictions || '-'}</td>
-                      <td className="py-2">{rsvp.visa_required ? 'Yes' : '-'}</td>
-                      <td className="py-2">{rsvp.accommodation_needed ? 'Yes' : '-'}</td>
-                      <td className="py-2 text-xs">{rsvp.submitted_at ? new Date(rsvp.submitted_at).toLocaleDateString() : '-'}</td>
+                      <td className="py-2">{rsvp.attending ? "Yes" : "No"}</td>
+                      <td className="py-2">
+                        {rsvp.dietary_restrictions || "-"}
+                      </td>
+                      <td className="py-2">{rsvp.visa_required ? "Yes" : "-"}</td>
+                      <td className="py-2">
+                        {rsvp.accommodation_needed ? "Yes" : "-"}
+                      </td>
+                      <td className="py-2 text-xs">
+                        {rsvp.submitted_at
+                          ? new Date(rsvp.submitted_at).toLocaleDateString()
+                          : "-"}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

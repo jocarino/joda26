@@ -158,6 +158,12 @@ export async function fetchGuestByCode(code: string): Promise<Guest | null> {
           typeof rawAllowedPlusOnes === "number" && rawAllowedPlusOnes > 0,
       });
 
+      const normalizeAllowedPlusOnes = (
+        value: unknown
+      ): number | undefined => {
+        return typeof value === "number" && value > 0 ? value : undefined;
+      };
+
       const guest = {
         id: record.id,
         invite_code: record.fields.invite_code || "",
@@ -167,13 +173,16 @@ export async function fetchGuestByCode(code: string): Promise<Guest | null> {
           []) as Location[],
         code_generated_at: record.fields.code_generated_at,
         // Only include allowed_plus_ones if it's a valid positive number
-        allowed_plus_ones:
-          record.fields.allowed_plus_ones !== undefined &&
-          record.fields.allowed_plus_ones !== null &&
-          typeof record.fields.allowed_plus_ones === "number" &&
-          record.fields.allowed_plus_ones > 0
-            ? record.fields.allowed_plus_ones
-            : undefined,
+        allowed_plus_ones: normalizeAllowedPlusOnes(record.fields.allowed_plus_ones),
+        allowed_plus_ones_lagos: normalizeAllowedPlusOnes(
+          (record.fields as any).allowed_plus_ones_lagos
+        ),
+        allowed_plus_ones_london: normalizeAllowedPlusOnes(
+          (record.fields as any).allowed_plus_ones_london
+        ),
+        allowed_plus_ones_portugal: normalizeAllowedPlusOnes(
+          (record.fields as any).allowed_plus_ones_portugal
+        ),
       };
 
       console.log(`[fetchGuestByCode] Returning guest:`, {
@@ -477,6 +486,10 @@ export async function getAllGuests(): Promise<Guest[]> {
   try {
     const data = await airtableRequest(`/${GUESTS_TABLE}?sort[0][field]=name`);
 
+    const normalizeAllowedPlusOnes = (value: unknown): number | undefined => {
+      return typeof value === "number" && value > 0 ? value : undefined;
+    };
+
     return (data.records || []).map((record: AirtableGuestRecord) => ({
       id: record.id,
       invite_code: record.fields.invite_code || "",
@@ -484,14 +497,18 @@ export async function getAllGuests(): Promise<Guest[]> {
       email: record.fields.email,
       allowed_locations: (record.fields.allowed_locations || []) as Location[],
       code_generated_at: record.fields.code_generated_at,
-      // Only include allowed_plus_ones if it's a valid positive number
-      allowed_plus_ones:
-        record.fields.allowed_plus_ones !== undefined &&
-        record.fields.allowed_plus_ones !== null &&
-        typeof record.fields.allowed_plus_ones === "number" &&
-        record.fields.allowed_plus_ones > 0
-          ? record.fields.allowed_plus_ones
-          : undefined,
+      // Global fallback (used when location-specific values are not set)
+      allowed_plus_ones: normalizeAllowedPlusOnes(record.fields.allowed_plus_ones),
+      // Location-specific values (preferred)
+      allowed_plus_ones_lagos: normalizeAllowedPlusOnes(
+        (record.fields as any).allowed_plus_ones_lagos
+      ),
+      allowed_plus_ones_london: normalizeAllowedPlusOnes(
+        (record.fields as any).allowed_plus_ones_london
+      ),
+      allowed_plus_ones_portugal: normalizeAllowedPlusOnes(
+        (record.fields as any).allowed_plus_ones_portugal
+      ),
     }));
   } catch (error) {
     console.error("Error fetching all guests:", error);
@@ -591,6 +608,44 @@ export async function getAllRSVPs(): Promise<RSVP[]> {
     }));
   } catch (error) {
     console.error("Error fetching all RSVPs:", error);
+    return [];
+  }
+}
+
+export async function getRSVPsByLocation(location: Location): Promise<RSVP[]> {
+  try {
+    const filterFormula = `{location}="${location}"`;
+    const encodedFormula = encodeURIComponent(filterFormula);
+
+    const data = await airtableRequest(
+      `/${RSVPS_TABLE}?filterByFormula=${encodedFormula}&sort[0][field]=submitted_at&sort[0][direction]=desc`
+    );
+
+    return (data.records || []).map((record: AirtableRSVPRecord) => ({
+      id: record.id,
+      invite_code: record.fields.invite_code,
+      location: record.fields.location as Location,
+      name: record.fields.name,
+      guests: record.fields.guests,
+      attending: record.fields.attending,
+      dietary_restrictions: record.fields.dietary_restrictions,
+      visa_required: record.fields.visa_required,
+      accommodation_needed: record.fields.accommodation_needed,
+      submitted_at: record.fields.submitted_at,
+      // Parse comma-separated string back to array
+      plus_one_names: record.fields.plus_one_names
+        ? typeof record.fields.plus_one_names === "string"
+          ? record.fields.plus_one_names
+              .split(",")
+              .map((name) => name.trim())
+              .filter((name) => name !== "")
+          : Array.isArray(record.fields.plus_one_names)
+          ? record.fields.plus_one_names
+          : undefined
+        : undefined,
+    }));
+  } catch (error) {
+    console.error("Error fetching RSVPs by location:", error);
     return [];
   }
 }

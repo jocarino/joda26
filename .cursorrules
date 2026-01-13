@@ -57,7 +57,11 @@ This is a Next.js 14 wedding website with code-based access control, Airtable in
 - Use `filterByFormula` with proper URL encoding for queries
 - Normalize codes to uppercase before querying
 - `plus_one_names` field: Use Long text field type, store as comma-separated string
-- `allowed_plus_ones` field: Use Number field type in Guests table
+- `allowed_plus_ones` field: Use Number field type in Guests table (global fallback)
+- Location-specific plus ones (preferred): use Number fields in Guests table:
+  - `allowed_plus_ones_lagos`
+  - `allowed_plus_ones_london`
+  - `allowed_plus_ones_portugal`
 - When updating RSVPs, check for existing RSVP by `invite_code` and `location` before creating
 - Use `updateRSVP()` function to update existing records instead of creating duplicates
 
@@ -263,8 +267,12 @@ import { fetchGuestByCode } from "@/lib/airtable";
 
 ### Guest Configuration
 
-- `allowed_plus_ones` field in Guests table (Number field type)
-- If not set or 0: Plus one fields are hidden
+- `allowed_plus_ones` field in Guests table (Number field type, global fallback)
+- Location-specific fields (preferred):
+  - `allowed_plus_ones_lagos`
+  - `allowed_plus_ones_london`
+  - `allowed_plus_ones_portugal`
+- If neither location-specific nor global is set (or value is 0): Plus one fields are hidden
 - If set to N (e.g., 2): Shows dropdown with options 0 to N
 - Only show "Number of Guests" field when `allowed_plus_ones > 0`
 
