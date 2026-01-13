@@ -1,7 +1,7 @@
 import Countdown from "@/components/Countdown";
-import ImageGallery from "@/components/ImageGallery";
 import RSVPForm from "@/components/RSVPForm";
 import LocationNav from "@/components/LocationNav";
+import HeroSection from "@/components/HeroSection";
 import { Location, Guest } from "@/types/rsvp";
 
 interface LondonContentProps {
@@ -20,23 +20,11 @@ export default function LondonContent({
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="py-16 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl md:text-7xl font-serif mb-8 tracking-tight font-normal">
-            DAMOLA & JOÃO
-          </h1>
-          <div className="text-5xl md:text-7xl font-bold mb-8 tracking-wider font-sans">
-            25 • 04 • 2026
-          </div>
-          {images.length > 0 && (
-            <ImageGallery images={images} alt="London wedding" />
-          )}
-          <p className="text-sm md:text-base mt-8 max-w-2xl mx-auto font-light tracking-wide">
-            JOIN US AS WE EMBARK ON A JOURNEY OF LOVE, JOY, AND ETERNAL
-            HAPPINESS.
-          </p>
-        </div>
-      </section>
+      <HeroSection
+        date="April 25th 2026"
+        images={images}
+        altText="London wedding"
+      />
 
       {/* Schedule & Times */}
       <section className="py-16 px-4 bg-black text-white">
@@ -71,7 +59,7 @@ export default function LondonContent({
       </section>
 
       {/* Locations */}
-      <section className="py-16 px-4 bg-white">
+      <section id="location" className="py-16 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
             LOCATIONS
@@ -113,7 +101,7 @@ export default function LondonContent({
       </section>
 
       {/* RSVP */}
-      <section className="py-16 px-4 bg-white">
+      <section id="rsvp" className="py-16 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
             RSVP
@@ -156,7 +144,7 @@ export default function LondonContent({
       </section>
 
       {/* Registry */}
-      <section className="py-16 px-4 bg-white">
+      <section id="registry" className="py-16 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
             REGISTRY
