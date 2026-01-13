@@ -1,15 +1,18 @@
-import Countdown from '@/components/Countdown';
-import ImageGallery from '@/components/ImageGallery';
-import RSVPForm from '@/components/RSVPForm';
-import LocationNav from '@/components/LocationNav';
-import { Location, Guest } from '@/types/rsvp';
+import Countdown from "@/components/Countdown";
+import ImageGallery from "@/components/ImageGallery";
+import RSVPForm from "@/components/RSVPForm";
+import LocationNav from "@/components/LocationNav";
+import { Location, Guest } from "@/types/rsvp";
 
 interface LondonContentProps {
   inviteCode?: string;
   guest?: Guest;
 }
 
-export default function LondonContent({ inviteCode, guest }: LondonContentProps) {
+export default function LondonContent({
+  inviteCode,
+  guest,
+}: LondonContentProps) {
   // Create date in local timezone to avoid timezone issues
   const weddingDate = new Date(2026, 3, 25); // April 25, 2026 (month is 0-indexed, so 3 = April)
   const images: string[] = []; // Add image URLs
@@ -25,9 +28,12 @@ export default function LondonContent({ inviteCode, guest }: LondonContentProps)
           <div className="text-5xl md:text-7xl font-bold mb-8 tracking-wider font-sans">
             25 • 04 • 2026
           </div>
-          {images.length > 0 && <ImageGallery images={images} alt="London wedding" />}
+          {images.length > 0 && (
+            <ImageGallery images={images} alt="London wedding" />
+          )}
           <p className="text-sm md:text-base mt-8 max-w-2xl mx-auto font-light tracking-wide">
-            JOIN US AS WE EMBARK ON A JOURNEY OF LOVE, JOY, AND ETERNAL HAPPINESS.
+            JOIN US AS WE EMBARK ON A JOURNEY OF LOVE, JOY, AND ETERNAL
+            HAPPINESS.
           </p>
         </div>
       </section>
@@ -35,8 +41,12 @@ export default function LondonContent({ inviteCode, guest }: LondonContentProps)
       {/* Schedule & Times */}
       <section className="py-16 px-4 bg-black text-white">
         <div className="max-w-4xl mx-auto">
-          <p className="text-sm uppercase tracking-wider mb-4 text-center">HERE'S A SNEAK PEEK OF</p>
-          <h2 className="text-3xl md:text-4xl font-serif mb-12 text-center font-normal">OUR SPECIAL DAY'S SCHEDULE</h2>
+          <p className="text-sm uppercase tracking-wider mb-4 text-center">
+            HERE&apos;S A SNEAK PEEK OF
+          </p>
+          <h2 className="text-3xl md:text-4xl font-serif mb-12 text-center font-normal">
+            OUR SPECIAL DAY&apos;S SCHEDULE
+          </h2>
           <div className="space-y-8">
             <div className="flex justify-between items-center border-b border-gray-700 pb-4">
               <span className="text-2xl font-bold">4:00 PM</span>
@@ -52,7 +62,9 @@ export default function LondonContent({ inviteCode, guest }: LondonContentProps)
             </div>
             <div className="flex justify-between items-center pb-4">
               <span className="text-2xl font-bold">10:00 PM</span>
-              <span className="text-lg uppercase tracking-wider">DANCING & FIREWORKS</span>
+              <span className="text-lg uppercase tracking-wider">
+                DANCING & FIREWORKS
+              </span>
             </div>
           </div>
         </div>
@@ -61,7 +73,9 @@ export default function LondonContent({ inviteCode, guest }: LondonContentProps)
       {/* Locations */}
       <section className="py-16 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">LOCATIONS</h2>
+          <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
+            LOCATIONS
+          </h2>
           <div className="space-y-8">
             <div>
               <h3 className="text-lg font-semibold mb-2">Ceremony Venue</h3>
@@ -78,15 +92,21 @@ export default function LondonContent({ inviteCode, guest }: LondonContentProps)
       {/* Getting There */}
       <section className="py-16 px-4">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">GETTING THERE</h2>
+          <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
+            GETTING THERE
+          </h2>
           <div className="space-y-4">
             <div>
               <h3 className="text-lg font-semibold mb-2">Airports</h3>
-              <p className="text-sm text-gray-600">Heathrow (LHR), Gatwick (LGW), or City (LCY)</p>
+              <p className="text-sm text-gray-600">
+                Heathrow (LHR), Gatwick (LGW), or City (LCY)
+              </p>
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-2">Transportation</h3>
-              <p className="text-sm text-gray-600">Details about transportation options...</p>
+              <p className="text-sm text-gray-600">
+                Details about transportation options...
+              </p>
             </div>
           </div>
         </div>
@@ -95,12 +115,24 @@ export default function LondonContent({ inviteCode, guest }: LondonContentProps)
       {/* RSVP */}
       <section className="py-16 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">RSVP</h2>
+          <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
+            RSVP
+          </h2>
           <RSVPForm location="London" inviteCode={inviteCode} guest={guest} />
           {/* Debug: Check guest prop */}
           {process.env.NODE_ENV === "development" && (
             <div className="mt-4 p-4 bg-gray-100 text-xs">
-              <strong>Debug:</strong> guest={guest ? JSON.stringify({ name: guest.name, allowed_plus_ones: guest.allowed_plus_ones }, null, 2) : "undefined"}
+              <strong>Debug:</strong> guest=
+              {guest
+                ? JSON.stringify(
+                    {
+                      name: guest.name,
+                      allowed_plus_ones: guest.allowed_plus_ones,
+                    },
+                    null,
+                    2
+                  )
+                : "undefined"}
             </div>
           )}
         </div>
@@ -112,7 +144,9 @@ export default function LondonContent({ inviteCode, guest }: LondonContentProps)
       {/* Dress Code */}
       <section className="py-16 px-4">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">DRESS CODE</h2>
+          <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
+            DRESS CODE
+          </h2>
           <div className="text-center">
             <p className="text-sm text-gray-600">
               Formal attire requested. Black tie optional.
@@ -124,14 +158,15 @@ export default function LondonContent({ inviteCode, guest }: LondonContentProps)
       {/* Registry */}
       <section className="py-16 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">REGISTRY</h2>
+          <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
+            REGISTRY
+          </h2>
           <div className="text-center">
             <p className="text-sm text-gray-600 mb-4">
-              Your presence is the greatest gift, but if you wish to honor us with a gift...
+              Your presence is the greatest gift, but if you wish to honor us
+              with a gift...
             </p>
-            <p className="text-sm">
-              Registry information and links...
-            </p>
+            <p className="text-sm">Registry information and links...</p>
           </div>
         </div>
       </section>
@@ -147,5 +182,3 @@ export default function LondonContent({ inviteCode, guest }: LondonContentProps)
     </div>
   );
 }
-
-
