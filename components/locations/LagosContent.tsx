@@ -213,6 +213,67 @@ export default function LagosContent({
               Kindly find our account details below.Thank you for your love,
               generosity, and for celebrating this special moment with us.
             </p>
+
+            <div className="space-y-6 mt-8">
+              {/* Naira Account */}
+              <div className="border-t pt-6">
+                <h4 className="text-lg font-semibold mb-4 text-center">
+                  NAIRA ACCOUNT
+                </h4>
+                <div className="space-y-2 max-w-md mx-auto text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Account No:</span>
+                    <span className="font-semibold">0793202713</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Bank:</span>
+                    <span className="font-semibold">Access Bank</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Name:</span>
+                    <span className="font-semibold">Olaleye Oluwadamola</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Pounds Account */}
+              <div className="border-t pt-6">
+                <h4 className="text-lg font-semibold mb-4 text-center">
+                  POUNDS ACCOUNT
+                </h4>
+                <div className="space-y-2 max-w-md mx-auto text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Account holder name:</span>
+                    <span className="font-semibold">Oluwadamola Olaleye</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Account number:</span>
+                    <span className="font-semibold">60013714</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Sort code:</span>
+                    <span className="font-semibold">20-26-78</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* PayPal */}
+              <div className="border-t pt-6">
+                <h4 className="text-lg font-semibold mb-4 text-center">
+                  PAYPAL
+                </h4>
+                <div className="text-center">
+                  <a
+                    href="https://paypal.me/JVeloso58"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-semibold underline inline-block"
+                  >
+                    paypal.me/JVeloso58
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
