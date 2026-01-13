@@ -12,15 +12,30 @@ export default function HeroSection({
   altText = "wedding",
 }: HeroSectionProps) {
   return (
-    <section className="py-16 px-4">
-      <div className="max-w-4xl mx-auto text-center">
-        <h1 className="text-5xl md:text-7xl font-serif mb-2 tracking-tight font-normal">
-          DAMOLA & JOÃO
-        </h1>
-        <div className="text-md md:text-lg mb-8 uppercase tracking-wider font-sans">
-          {date}
-        </div>
-        {images.length > 0 && <ImageGallery images={images} alt={altText} />}
+    <section className="py-0 px-4">
+      <div className=" mx-auto">
+        {images.length > 0 ? (
+          <div className="relative">
+            <ImageGallery images={images} alt={altText} />
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 pointer-events-none">
+              <h1 className="text-5xl md:text-7xl font-serif mb-2 tracking-tight font-normal text-white drop-shadow-lg">
+                DAMOLA & JOÃO
+              </h1>
+              <div className="text-md md:text-lg uppercase tracking-wider font-sans text-white drop-shadow-lg">
+                {date}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center">
+            <h1 className="text-5xl md:text-7xl font-serif mb-2 tracking-tight font-normal">
+              DAMOLA & JOÃO
+            </h1>
+            <div className="text-md md:text-lg mb-8 uppercase tracking-wider font-sans">
+              {date}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

@@ -16,7 +16,14 @@ export default function LagosContent({
 }: LagosContentProps) {
   // Create date in local timezone to avoid timezone issues
   const weddingDate = new Date(2026, 2, 27); // March 27, 2026 (month is 0-indexed, so 2 = March)
-  const images: string[] = []; // Add image URLs
+  const images: string[] = [
+    "/images/A-147.jpg",
+    "/images/A-180.jpg",
+    "/images/A-194.jpg",
+    "/images/A-254.jpg",
+    "/images/A-44.jpg",
+    "/images/A-89.jpg",
+  ];
 
   return (
     <div className="min-h-screen">
@@ -105,13 +112,10 @@ export default function LagosContent({
       <section className="py-16 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
-            COLOUR CODE & ASOEBI
+            Colour of the Day & Asoebi
           </h2>
           <div className="space-y-6">
             <div className="text-center">
-              <h3 className="text-xl font-semibold mb-3">
-                Colour of the Day & Asoebi
-              </h3>
               <p className="text-sm text-gray-700 mb-4">
                 The official colour of the day is{" "}
                 <span className="font-semibold">Olive Green</span>.
@@ -175,7 +179,7 @@ export default function LagosContent({
                 href="https://wa.me/447904872478"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm font-semibold hover:underline inline-block"
+                className="text-sm font-semibold underline inline-block"
               >
                 wa.me/447904872478
               </a>
