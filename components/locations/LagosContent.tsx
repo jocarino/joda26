@@ -1,7 +1,7 @@
 import Countdown from "@/components/Countdown";
 import RSVPForm from "@/components/RSVPForm";
 import HeroSection from "@/components/HeroSection";
-import { Location, Guest } from "@/types/rsvp";
+import { Guest } from "@/types/rsvp";
 
 interface LagosContentProps {
   inviteCode?: string;
@@ -201,10 +201,13 @@ export default function LagosContent({
             <p className="text-sm text-gray-600 mb-4 text-justify">
               As we will be travelling back to the UK shortly after the
               celebration, we will unfortunately be unable to transport physical
-              or boxed gifts. Your presence at our wedding would mean the world
-              to us, but for guests who wish to honour us with a gift we would
-              appreciate monetary gifts as they will be much easier for us to
-              receive and carry with us.
+              or boxed gifts.
+            </p>
+            <p className="text-sm text-gray-600 mb-4 text-justify">
+              Your presence at our wedding would mean the world to us, but for
+              guests who wish to honour us with a gift we would appreciate
+              monetary gifts as they will be much easier for us to receive and
+              carry with us.
             </p>
             <p className="text-sm text-gray-600 mb-4 text-justify">
               Kindly find our account details below.Thank you for your love,

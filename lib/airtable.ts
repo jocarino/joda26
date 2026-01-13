@@ -333,6 +333,7 @@ export async function updateRSVP(rsvpId: string, rsvp: RSVP): Promise<void> {
     const fields: any = {
       location: rsvp.location,
       name: rsvp.name,
+      phone_number: rsvp.phone_number,
       guests: rsvp.guests,
       attending: rsvp.attending,
     };
@@ -388,6 +389,7 @@ export async function createRSVP(rsvp: RSVP): Promise<void> {
     const fields: any = {
       location: rsvp.location,
       name: rsvp.name,
+      phone_number: rsvp.phone_number,
       guests: rsvp.guests,
       attending: rsvp.attending,
     };
@@ -547,6 +549,7 @@ export async function getRSVPByCodeAndLocation(
         invite_code: record.fields.invite_code,
         location: record.fields.location as Location,
         name: record.fields.name,
+        phone_number: record.fields.phone_number || "",
         guests: record.fields.guests,
         attending: record.fields.attending,
         dietary_restrictions: record.fields.dietary_restrictions,
@@ -588,6 +591,7 @@ export async function getAllRSVPs(): Promise<RSVP[]> {
       invite_code: record.fields.invite_code,
       location: record.fields.location as Location,
       name: record.fields.name,
+      phone_number: record.fields.phone_number || "",
       guests: record.fields.guests,
       attending: record.fields.attending,
       dietary_restrictions: record.fields.dietary_restrictions,
@@ -626,6 +630,7 @@ export async function getRSVPsByLocation(location: Location): Promise<RSVP[]> {
       invite_code: record.fields.invite_code,
       location: record.fields.location as Location,
       name: record.fields.name,
+      phone_number: record.fields.phone_number || "",
       guests: record.fields.guests,
       attending: record.fields.attending,
       dietary_restrictions: record.fields.dietary_restrictions,

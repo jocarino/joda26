@@ -25,6 +25,7 @@ export interface RSVP {
   invite_code?: string;
   location: Location;
   name: string;
+  phone_number: string;
   guests: number;
   attending: boolean;
   dietary_restrictions?: string;
@@ -55,6 +56,7 @@ export interface AirtableRSVPRecord {
     invite_code?: string;
     location: string;
     name: string;
+    phone_number?: string;
     guests: number;
     attending: boolean;
     dietary_restrictions?: string;
@@ -64,5 +66,3 @@ export interface AirtableRSVPRecord {
     plus_one_names?: string | string[]; // Can be string (comma-separated) or array from API
   };
 }
-
-

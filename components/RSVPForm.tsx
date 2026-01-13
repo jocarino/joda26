@@ -59,6 +59,7 @@ export default function RSVPForm({
 
   const [formData, setFormData] = useState({
     name: "",
+    phone_number: "",
     attending: true,
     dietary_restrictions: "",
     visa_required: false,
@@ -92,6 +93,7 @@ export default function RSVPForm({
             setExistingRSVPId(rsvp.id);
             setFormData({
               name: rsvp.name || guest?.name || "",
+              phone_number: rsvp.phone_number || "",
               attending: rsvp.attending !== false,
               dietary_restrictions: rsvp.dietary_restrictions || "",
               visa_required: rsvp.visa_required || false,
@@ -138,6 +140,7 @@ export default function RSVPForm({
           invite_code: inviteCode,
           location,
           name: formData.name,
+          phone_number: formData.phone_number,
           guests: formData.plus_one_count + 1, // Main guest + plus ones
           attending: formData.attending,
           dietary_restrictions: formData.dietary_restrictions,
@@ -198,6 +201,7 @@ export default function RSVPForm({
         setTimeout(() => {
           setFormData({
             name: "",
+            phone_number: "",
             attending: true,
             dietary_restrictions: "",
             visa_required: false,
@@ -278,6 +282,26 @@ export default function RSVPForm({
           className={`w-full px-4 py-2 border border-gray-300 focus:outline-none focus:border-black transition-colors ${
             inviteCode ? "bg-gray-100 cursor-not-allowed" : ""
           }`}
+        />
+      </div>
+
+      <div>
+        <label
+          htmlFor="phone_number"
+          className="block text-sm uppercase tracking-wider mb-2"
+        >
+          Phone Number *
+        </label>
+        <input
+          id="phone_number"
+          type="tel"
+          value={formData.phone_number}
+          onChange={(e) =>
+            setFormData({ ...formData, phone_number: e.target.value })
+          }
+          required
+          className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:border-black transition-colors"
+          placeholder="+1234567890"
         />
       </div>
 
@@ -417,7 +441,10 @@ export default function RSVPForm({
 
       <button
         type="submit"
-        disabled={submitting || (!simple && !formData.name)}
+        disabled={
+          submitting ||
+          (!simple && (!formData.name || !formData.phone_number))
+        }
         className="w-full px-6 py-3 border border-black hover:bg-black hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider text-sm"
       >
         {submitting

@@ -48,6 +48,7 @@ export async function PUT(request: NextRequest) {
       invite_code: body.invite_code || undefined,
       location: body.location,
       name: body.name,
+      phone_number: body.phone_number,
       guests: parseInt(body.guests, 10) || 1,
       attending: body.attending !== false,
       dietary_restrictions: body.dietary_restrictions || undefined,
@@ -59,9 +60,9 @@ export async function PUT(request: NextRequest) {
     };
 
     // Validate required fields
-    if (!rsvp.location || !rsvp.name) {
+    if (!rsvp.location || !rsvp.name || !rsvp.phone_number) {
       return NextResponse.json(
-        { error: 'Location and name are required' },
+        { error: 'Location, name, and phone number are required' },
         { status: 400 }
       );
     }
@@ -97,6 +98,7 @@ export async function POST(request: NextRequest) {
           invite_code: body.invite_code || undefined,
           location: body.location,
           name: body.name,
+          phone_number: body.phone_number,
           guests: parseInt(body.guests, 10) || 1,
           attending: body.attending !== false,
           dietary_restrictions: body.dietary_restrictions || undefined,
@@ -108,9 +110,9 @@ export async function POST(request: NextRequest) {
         };
 
         // Validate required fields
-        if (!rsvp.location || !rsvp.name) {
+        if (!rsvp.location || !rsvp.name || !rsvp.phone_number) {
           return NextResponse.json(
-            { error: 'Location and name are required' },
+            { error: 'Location, name, and phone number are required' },
             { status: 400 }
           );
         }
@@ -125,6 +127,7 @@ export async function POST(request: NextRequest) {
       invite_code: body.invite_code || undefined,
       location: body.location,
       name: body.name,
+      phone_number: body.phone_number,
       guests: parseInt(body.guests, 10) || 1,
       attending: body.attending !== false,
       dietary_restrictions: body.dietary_restrictions || undefined,
@@ -136,9 +139,9 @@ export async function POST(request: NextRequest) {
     };
 
     // Validate required fields
-    if (!rsvp.location || !rsvp.name) {
+    if (!rsvp.location || !rsvp.name || !rsvp.phone_number) {
       return NextResponse.json(
-        { error: 'Location and name are required' },
+        { error: 'Location, name, and phone number are required' },
         { status: 400 }
       );
     }

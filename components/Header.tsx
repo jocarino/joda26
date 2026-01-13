@@ -40,7 +40,7 @@ export default function Header() {
         <div className="flex justify-end">
           <button
             onClick={() => scrollToSection("rsvp")}
-            className="text-sm uppercase tracking-wider border border-black px-4 py-2 hover:bg-black hover:text-white transition-colors"
+            className="text-sm uppercase tracking-wider border border-[#5a6134] text-[#5a6134] px-4 py-2 hover:bg-[#5a6134] hover:text-white transition-colors"
           >
             RSVP
           </button>

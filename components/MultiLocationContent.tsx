@@ -65,8 +65,8 @@ export default function MultiLocationContent({
                   onClick={() => setActiveLocation(location)}
                   className={`px-6 py-4 text-sm uppercase tracking-wider transition-colors whitespace-nowrap ${
                     activeLocation === location
-                      ? "border-b-2 border-black font-semibold"
-                      : "text-gray-600 hover:text-black"
+                      ? "border-b-2 border-[#5a6134] font-semibold"
+                      : "text-gray-600 hover:text-[#5a6134]"
                   }`}
                 >
                   {locationNames[location]}
