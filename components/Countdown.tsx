@@ -74,11 +74,8 @@ export default function Countdown({ targetDate }: CountdownProps) {
     return (
       <div className="py-16 bg-black text-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <p className="text-sm uppercase tracking-widest mb-4">
-            HERE&apos;S A SNEAK PEEK OF
-          </p>
-          <h2 className="text-2xl md:text-3xl font-serif mb-8 tracking-wide font-normal">
-            LET THE COUNTDOWN BEGIN
+          <h2 className="uppercase text-2xl md:text-3xl font-serif mb-8 tracking-wide font-normal">
+            Our special day is in…
           </h2>
           <div className="flex justify-center items-center gap-6 md:gap-12 flex-wrap">
             <div className="text-center">
@@ -122,11 +119,8 @@ export default function Countdown({ targetDate }: CountdownProps) {
   return (
     <div className="py-16 bg-black text-white">
       <div className="max-w-4xl mx-auto px-4 text-center">
-        <p className="text-sm uppercase tracking-widest mb-4">
-          HERE&apos;S A SNEAK PEEK OF
-        </p>
-        <h2 className="text-2xl md:text-3xl font-serif mb-8 tracking-wide font-normal">
-          LET THE COUNTDOWN BEGIN
+        <h2 className="uppercase text-2xl md:text-3xl font-serif mb-8 tracking-wide font-normal">
+          Our special day is in…
         </h2>
         <div className="flex justify-center items-center gap-6 md:gap-12 flex-wrap">
           <div className="text-center">
