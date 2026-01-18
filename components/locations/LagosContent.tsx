@@ -26,13 +26,16 @@ export default function LagosContent({
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen space-y-0 gap-0">
       {/* Hero Section */}
       <HeroSection
         date="March 27th 2026"
         images={images}
         altText="Lagos wedding"
       />
+
+      {/* Countdown */}
+      <Countdown targetDate={weddingDate.getTime()} />
 
       {/* Location & Time */}
       <section id="location" className="py-16 px-4 bg-white">
@@ -109,23 +112,20 @@ export default function LagosContent({
       </section>
 
       {/* Colour Code & Asoebi Details */}
-      <section className="py-16 px-4 bg-white">
+      <section id="asoebi" className="py-16 px-4 bg-[#5a6134] text-white">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
             Colour of the Day & Asoebi
           </h2>
           <div className="space-y-6">
             <div className="text-center">
-              <p className="text-sm text-gray-700 mb-4">
+              <p className="text-sm mb-4">
                 The official colour of the day is{" "}
-                <span className="font-semibold">Olive Green</span>.
-              </p>
-              <p className="text-sm text-gray-700">
-                We kindly ask that guests only wear Olive Green.
+                <span className="font-semibold">Olive Green monotone</span>.
               </p>
             </div>
 
-            <div className="border-t pt-6">
+            <div className="border-t border-white/30 pt-6">
               <h4 className="text-lg font-semibold mb-4 text-center">
                 For anyone interested in Asoebi (Optional):
               </h4>
@@ -141,45 +141,43 @@ export default function LagosContent({
               </div>
             </div>
 
-            <div className="border-t pt-6">
+            <div className="border-t border-white/30 pt-6">
               <h4 className="text-lg font-semibold mb-3 text-center">
                 For delivery within Lagos:
               </h4>
-              <p className="text-sm text-gray-700 text-center mb-2">
+              <p className="text-sm text-center mb-2">
                 Please add <span className="font-semibold">₦5,000</span> and
                 include your delivery address with your proof of payment.
               </p>
             </div>
 
-            <div className="border-t pt-6">
+            <div className="border-t border-white/30 pt-6">
               <h4 className="text-lg font-semibold mb-4 text-center">
                 Payment Details:
               </h4>
               <div className="space-y-2 max-w-md mx-auto text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Account No:</span>
+                  <span>Account No:</span>
                   <span className="font-semibold">0793202713</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Bank:</span>
+                  <span>Bank:</span>
                   <span className="font-semibold">Access Bank</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Name:</span>
+                  <span>Name:</span>
                   <span className="font-semibold">Olaleye Oluwadamola</span>
                 </div>
               </div>
             </div>
 
-            <div className="border-t pt-6 text-center">
-              <p className="text-sm text-gray-700 mb-2">
-                Please send proof of payment to:
-              </p>
+            <div className="border-t border-white/30 pt-6 text-center">
+              <p className="text-sm mb-2">Please send proof of payment to:</p>
               <a
                 href="https://wa.me/447904872478"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm font-semibold underline inline-block"
+                className="text-sm font-semibold underline inline-block hover:opacity-80 transition-opacity"
               >
                 wa.me/447904872478
               </a>
@@ -187,9 +185,6 @@ export default function LagosContent({
           </div>
         </div>
       </section>
-
-      {/* Countdown */}
-      <Countdown targetDate={weddingDate.getTime()} />
 
       {/* Registry */}
       <section id="registry" className="py-16 px-4">

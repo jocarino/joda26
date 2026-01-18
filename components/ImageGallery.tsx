@@ -32,7 +32,7 @@ export default function ImageGallery({
   };
 
   return (
-    <div className="w-full mx-auto my-8">
+    <div className="w-full mx-auto">
       <div className="relative aspect-[16/9] overflow-hidden bg-gray-200 rounded">
         {/* Images */}
         <div className="relative w-full h-full">

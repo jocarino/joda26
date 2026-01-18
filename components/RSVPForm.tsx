@@ -60,7 +60,7 @@ export default function RSVPForm({
   const [formData, setFormData] = useState({
     name: "",
     phone_number: "",
-    attending: true,
+    attending: null as boolean | null,
     dietary_restrictions: "",
     visa_required: false,
     accommodation_needed: false,
@@ -94,7 +94,7 @@ export default function RSVPForm({
             setFormData({
               name: rsvp.name || guest?.name || "",
               phone_number: rsvp.phone_number || "",
-              attending: rsvp.attending !== false,
+              attending: rsvp.attending ?? null,
               dietary_restrictions: rsvp.dietary_restrictions || "",
               visa_required: rsvp.visa_required || false,
               accommodation_needed: rsvp.accommodation_needed || false,
@@ -129,6 +129,13 @@ export default function RSVPForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    // Validate attendance is explicitly set
+    if (formData.attending === null || formData.attending === undefined) {
+      setError("Please select whether you will be attending (Yes or No)");
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -180,7 +187,7 @@ export default function RSVPForm({
                 setFormData({
                   name: rsvp.name || guest?.name || "",
                   phone_number: rsvp.phone_number || "",
-                  attending: rsvp.attending !== false,
+                  attending: rsvp.attending ?? null,
                   dietary_restrictions: rsvp.dietary_restrictions || "",
                   visa_required: rsvp.visa_required || false,
                   accommodation_needed: rsvp.accommodation_needed || false,
@@ -203,7 +210,7 @@ export default function RSVPForm({
           setFormData({
             name: "",
             phone_number: "",
-            attending: true,
+            attending: null,
             dietary_restrictions: "",
             visa_required: false,
             accommodation_needed: false,
@@ -306,6 +313,37 @@ export default function RSVPForm({
         />
       </div>
 
+      {/* Attendance - Required on all forms */}
+      <div>
+        <label className="block text-sm uppercase tracking-wider mb-3">
+          Will you be attending? *
+        </label>
+        <div className="flex gap-6">
+          <label className="flex items-center space-x-2 cursor-pointer">
+            <input
+              type="radio"
+              name="attending"
+              checked={formData.attending === true}
+              onChange={() => setFormData({ ...formData, attending: true })}
+              className="w-4 h-4 border-gray-300"
+              required
+            />
+            <span className="text-sm uppercase tracking-wider">Yes</span>
+          </label>
+          <label className="flex items-center space-x-2 cursor-pointer">
+            <input
+              type="radio"
+              name="attending"
+              checked={formData.attending === false}
+              onChange={() => setFormData({ ...formData, attending: false })}
+              className="w-4 h-4 border-gray-300"
+              required
+            />
+            <span className="text-sm uppercase tracking-wider">No</span>
+          </label>
+        </div>
+      </div>
+
       {!simple && (
         <>
           {maxPlusOnes > 0 && (
@@ -373,22 +411,6 @@ export default function RSVPForm({
               ))}
             </div>
           )}
-
-          <div>
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={formData.attending}
-                onChange={(e) =>
-                  setFormData({ ...formData, attending: e.target.checked })
-                }
-                className="w-4 h-4 border-gray-300"
-              />
-              <span className="text-sm uppercase tracking-wider">
-                I will be attending
-              </span>
-            </label>
-          </div>
         </>
       )}
 
@@ -443,9 +465,11 @@ export default function RSVPForm({
       <button
         type="submit"
         disabled={
-          submitting || (!simple && (!formData.name || !formData.phone_number))
+          submitting ||
+          formData.attending === null ||
+          (!simple && (!formData.name || !formData.phone_number))
         }
-        className="w-full px-6 py-3 border border-black hover:bg-black hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider text-sm"
+        className="w-full px-6 py-3 border border-[#5a6134] hover:bg-[#5a6134] hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider text-sm"
       >
         {submitting
           ? existingRSVPId

@@ -72,7 +72,7 @@ export default function Countdown({ targetDate }: CountdownProps) {
   // Don't render until mounted to avoid hydration mismatch
   if (!mounted) {
     return (
-      <div className="py-16 bg-[#5a6134] text-white">
+      <div className="bg-[#5a6134] text-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="uppercase text-2xl md:text-3xl font-serif mb-8 tracking-wide font-normal">
             Our special day is in…
@@ -117,7 +117,7 @@ export default function Countdown({ targetDate }: CountdownProps) {
   }
 
   return (
-    <div className="py-16 bg-[#5a6134] text-white">
+    <div className="py-4 bg-[#5a6134] text-white">
       <div className="max-w-4xl mx-auto px-4 text-center">
         <h2 className="uppercase text-2xl md:text-3xl font-serif mb-8 tracking-wide font-normal">
           Our special day is in…

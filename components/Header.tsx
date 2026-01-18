@@ -1,15 +1,30 @@
 "use client";
 
+import { useRef } from "react";
+
 export default function Header() {
+  const headerRef = useRef<HTMLElement>(null);
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (element && headerRef.current) {
+      const headerHeight = headerRef.current.offsetHeight;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition =
+        elementPosition + window.pageYOffset - headerHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
     }
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 py-4 px-4">
+    <nav
+      ref={headerRef}
+      className="sticky top-0 z-50 bg-white border-b border-gray-200 py-4 px-4"
+    >
       <div className="max-w-6xl mx-auto grid grid-cols-3 items-center">
         {/* Left: Logo */}
         <div className="flex items-center">
@@ -27,6 +42,12 @@ export default function Header() {
             className="hover:underline"
           >
             LOCATION
+          </button>
+          <button
+            onClick={() => scrollToSection("asoebi")}
+            className="hover:underline"
+          >
+            ASOEBI
           </button>
           <button
             onClick={() => scrollToSection("registry")}

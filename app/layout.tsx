@@ -5,7 +5,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export const metadata: Metadata = {
   title: "Damola & João's Wedding",
-  description: "Join us as in our wedding celebration.",
+  description: "Join us in our wedding celebration.",
   icons: {
     icon: "/images/JoDa Logo.svg",
     shortcut: "/images/JoDa Logo.svg",
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Damola & João's Wedding",
-    description: "Join us as in our wedding celebration.",
+    description: "Join us in our wedding celebration.",
     url: siteUrl,
     siteName: "Damola & João Wedding",
     images: [
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Damola & João's Wedding",
-    description: "Join us as in our wedding celebration.",
+    description: "Join us in our wedding celebration.",
     images: [`${siteUrl}/images/A-194.jpg`],
   },
 };
