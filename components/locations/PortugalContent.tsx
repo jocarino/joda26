@@ -1,7 +1,9 @@
+import Image from "next/image";
 import Countdown from "@/components/Countdown";
 import RSVPForm from "@/components/RSVPForm";
 import LocationNav from "@/components/LocationNav";
 import HeroSection from "@/components/HeroSection";
+import Registry from "@/components/Registry";
 import { Guest } from "@/types/rsvp";
 
 interface PortugalContentProps {
@@ -15,16 +17,14 @@ export default function PortugalContent({
 }: PortugalContentProps) {
   // Create date in local timezone to avoid timezone issues
   const weddingDate = new Date(2026, 4, 2); // May 2, 2026 (month is 0-indexed, so 4 = May)
-  const images: string[] = []; // Add image URLs
 
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <HeroSection
-        date="May 2nd 2026"
-        images={images}
-        altText="Portugal wedding"
-      />
+      <HeroSection date="May 2nd 2026" altText="Portugal wedding" />
+
+      {/* Countdown */}
+      <Countdown targetDate={weddingDate.getTime()} />
 
       {/* Location & Time */}
       <section id="location" className="py-16 px-4 bg-white">
@@ -34,19 +34,41 @@ export default function PortugalContent({
           </h2>
           <div className="grid md:grid-cols-3 gap-8 items-center">
             <div className="text-center md:text-left">
-              <p className="text-lg font-semibold mb-2">VENUE NAME</p>
-              <p className="text-sm text-gray-600">Portugal</p>
+              <p className="text-lg font-semibold mb-2">
+                Boavista Golf & Spa Resort
+              </p>
+              <p className="text-sm text-gray-600">Lagos, Portugal</p>
             </div>
-            <div className="aspect-video bg-gray-200 grayscale">
-              {/* Venue image placeholder */}
+            <div className="aspect-video w-full overflow-hidden rounded">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3182.1190506402113!2d-8.706422810977466!3d37.10228350971139!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd1b3107836f11af%3A0xc25eedf65ce11295!2sBoavista%20Golf%20%26%20Spa%20Resort!5e0!3m2!1sen!2suk!4v1768737643555!5m2!1sen!2suk"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="w-full h-full"
+                title="Boavista Golf & Spa Resort Location"
+              />
             </div>
             <div className="text-center md:text-right">
               <p className="text-sm text-gray-600 mb-2">ADDRESS</p>
-              <p className="text-sm">Portugal</p>
+              <p className="text-sm text-gray-600 mb-6">
+                Boavista Golf & Spa Resort, Lagos, Portugal
+              </p>
+              <a
+                href="https://maps.app.goo.gl/?link=https://www.google.com/maps/place/Boavista%20Golf%20%26%20Spa%20Resort/@37.1022835,-8.7064228,17z/data%3D!3m1!4b1!4m6!3m5!1s0xd1b3107836f11af:0xc25eedf65ce11295!8m2!3d37.1022835!4d-8.704248!16s%2Fg%2F11c0vqjqjz"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm hover:underline"
+              >
+                View on Google Maps
+              </a>
             </div>
           </div>
           <div className="mt-8 text-center">
-            <p className="text-lg mb-2">4:00 PM</p>
+            <p className="text-lg mb-1">3:30 PM</p>
             <p className="text-sm uppercase tracking-wider">Ceremony</p>
           </div>
         </div>
@@ -61,17 +83,109 @@ export default function PortugalContent({
           <div className="space-y-4">
             <div>
               <h3 className="text-lg font-semibold mb-2">Airports</h3>
-              <p className="text-sm text-gray-600">
-                Lisbon Airport (LIS) or Porto Airport (OPO)
-              </p>
+              <p className="text-sm text-gray-600">Faro Airport (FAO)</p>
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-2">Transportation</h3>
+              <p className="text-sm text-gray-600 mb-2">
+                <a
+                  href="https://www.faroairport.pt/en/fao/access-parking/getting-to-and-from-the-airport/public-transportation"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-semibold text-[#5a6134] underline"
+                >
+                  Official Airport Transportation information
+                </a>
+                : here you can find taxi transfers to Lagos, bus, trains and
+                others.
+              </p>
               <p className="text-sm text-gray-600">
-                Details about transportation from airport to venue...
+                For getting around Lagos, Uber and Bolt are convenient options.
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Accommodation */}
+      <section id="accommodation" className="py-16 px-4">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
+            ACCOMMODATION
+          </h2>
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Guest Rate</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                We have secured special rates at the{" "}
+                <a
+                  href="https://www.boavistaresort.pt/pt/Homepage.aspx"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-semibold text-[#5a6134] underline"
+                >
+                  Boavista Golf & Spa Resort
+                </a>
+                .
+              </p>
+
+              <div className="gap-1 mt-2">
+                <div className="w-full relative aspect-video rounded shadow-sm overflow-hidden">
+                  <p className="text-sm text-gray-600 mb-2">
+                    When you book your stay, please use the code: WEDBC.
+                  </p>
+                  <p className="text-sm text-gray-600 mb-2">
+                    You&apos;ll need to expand the &quot;modify search&quot;.
+                  </p>
+                  <Image
+                    src="/images/Screenshot 2026-01-18 at 12.12.25.png"
+                    alt="Boavista Golf & Spa Resort guest rate information"
+                    fill
+                    className="object-contain rounded"
+                  />
+                </div>
+                <div className="w-full relative aspect-video rounded shadow-sm overflow-hidden mt-2">
+                  <p className="text-sm text-gray-600 mb-2">
+                    On the box that says &quot;Promotional Code&quot;, enter the
+                    code: WEDBC.
+                  </p>
+                  <Image
+                    src="/images/Screenshot 2026-01-18 at 12.13.34.png"
+                    alt="Boavista Golf & Spa Resort booking details"
+                    fill
+                    className="object-contain rounded"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Dress Code */}
+      <section id="dress-code" className="py-16 px-4 bg-white">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="whitespace-nowrap text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
+            DRESS CODE
+          </h2>
+          <div className="text-center space-y-2">
+            <p className="text-sm text-gray-600">
+              Semi formal: dresses and suits.
+            </p>
+            <p className="text-sm text-gray-600">
+              So we can all look dandy and fancy! 💃🕺
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Registry */}
+      <section id="registry" className="py-16 px-4 bg-[#5a6134] text-white">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
+            REGISTRY
+          </h2>
+          <Registry variant="secondary" />
         </div>
       </section>
 
@@ -101,90 +215,8 @@ export default function PortugalContent({
         </div>
       </section>
 
-      {/* Accommodation */}
-      <section className="py-16 px-4">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
-            ACCOMMODATION
-          </h2>
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-semibold mb-2">Guest Rate</h3>
-              <p className="text-sm text-gray-600 mb-4">
-                We have secured special rates at the following hotels...
-              </p>
-              <p className="text-sm">
-                Contact information and booking details...
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-2">Hotels Nearby</h3>
-              <p className="text-sm text-gray-600">
-                Additional hotel recommendations in the area...
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Countdown */}
-      <Countdown targetDate={weddingDate.getTime()} />
-
-      {/* Dress Code */}
-      <section className="py-16 px-4 bg-white">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
-            DRESS CODE
-          </h2>
-          <div className="text-center">
-            <p className="text-sm text-gray-600">
-              Formal attire requested. Black tie optional.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Registry */}
-      <section id="registry" className="py-16 px-4">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
-            REGISTRY
-          </h2>
-          <div className="text-center">
-            <p className="text-sm text-gray-600 mb-4">
-              Your presence is the greatest gift, but if you wish to honor us
-              with a gift...
-            </p>
-            <p className="text-sm">Registry information and links...</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Links to Other Locations */}
-      <section className="py-16 px-4 bg-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-serif mb-8 font-normal">
-            OTHER LOCATIONS
-          </h2>
-          <div className="flex justify-center gap-6 flex-wrap">
-            <a
-              href="/?location=Lagos"
-              className="text-sm uppercase tracking-wider hover:underline"
-            >
-              Lagos
-            </a>
-            <a
-              href="/?location=London"
-              className="text-sm uppercase tracking-wider hover:underline"
-            >
-              London
-            </a>
-          </div>
-        </div>
-      </section>
-
       {/* Location Navigation */}
-      {guest && (
+      {guest && guest.allowed_locations.length > 1 && (
         <LocationNav
           currentLocation="Portugal"
           allowedLocations={guest.allowed_locations}

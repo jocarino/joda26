@@ -147,7 +147,8 @@ export default function RSVPForm({
           invite_code: inviteCode,
           location,
           name: formData.name,
-          phone_number: formData.phone_number,
+          phone_number:
+            location === "Lagos" ? formData.phone_number : undefined,
           guests: formData.plus_one_count + 1, // Main guest + plus ones
           attending: formData.attending,
           dietary_restrictions: formData.dietary_restrictions,
@@ -293,25 +294,28 @@ export default function RSVPForm({
         />
       </div>
 
-      <div>
-        <label
-          htmlFor="phone_number"
-          className="block text-sm uppercase tracking-wider mb-2"
-        >
-          Phone Number *
-        </label>
-        <input
-          id="phone_number"
-          type="tel"
-          value={formData.phone_number}
-          onChange={(e) =>
-            setFormData({ ...formData, phone_number: e.target.value })
-          }
-          required
-          className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:border-black transition-colors"
-          placeholder="+1234567890"
-        />
-      </div>
+      {/* Phone Number - Only show for Lagos */}
+      {location === "Lagos" && (
+        <div>
+          <label
+            htmlFor="phone_number"
+            className="block text-sm uppercase tracking-wider mb-2"
+          >
+            Phone Number *
+          </label>
+          <input
+            id="phone_number"
+            type="tel"
+            value={formData.phone_number}
+            onChange={(e) =>
+              setFormData({ ...formData, phone_number: e.target.value })
+            }
+            required
+            className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:border-black transition-colors"
+            placeholder="+1234567890"
+          />
+        </div>
+      )}
 
       {/* Attendance - Required on all forms */}
       <div>
@@ -467,7 +471,9 @@ export default function RSVPForm({
         disabled={
           submitting ||
           formData.attending === null ||
-          (!simple && (!formData.name || !formData.phone_number))
+          (!simple &&
+            (!formData.name ||
+              (location === "Lagos" && !formData.phone_number)))
         }
         className="w-full px-6 py-3 border border-[#5a6134] hover:bg-[#5a6134] hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider text-sm"
       >

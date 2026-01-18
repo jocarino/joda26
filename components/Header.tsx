@@ -1,9 +1,27 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Location } from "@/types/rsvp";
 
 export default function Header() {
   const headerRef = useRef<HTMLElement>(null);
+  const searchParams = useSearchParams();
+  const [location, setLocation] = useState<Location | null>(null);
+
+  useEffect(() => {
+    // Get location from URL params
+    const locationParam = searchParams.get("location");
+    if (
+      locationParam &&
+      ["Lagos", "London", "Portugal"].includes(locationParam)
+    ) {
+      setLocation(locationParam as Location);
+    } else {
+      // Default to Lagos if no location param
+      setLocation("Lagos");
+    }
+  }, [searchParams]);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -17,6 +35,88 @@ export default function Header() {
         top: offsetPosition,
         behavior: "smooth",
       });
+    }
+  };
+
+  const renderMenuItems = () => {
+    if (!location) return null;
+
+    switch (location) {
+      case "Lagos":
+        return (
+          <>
+            <button
+              onClick={() => scrollToSection("location")}
+              className="hover:underline"
+            >
+              LOCATION
+            </button>
+            <button
+              onClick={() => scrollToSection("asoebi")}
+              className="hover:underline"
+            >
+              ASOEBI
+            </button>
+            <button
+              onClick={() => scrollToSection("registry")}
+              className="hover:underline"
+            >
+              REGISTRY
+            </button>
+          </>
+        );
+      case "London":
+        return (
+          <>
+            <button
+              onClick={() => scrollToSection("location")}
+              className="hover:underline"
+            >
+              LOCATION
+            </button>
+            <button
+              onClick={() => scrollToSection("dress-code")}
+              className="hover:underline whitespace-nowrap"
+            >
+              DRESS CODE
+            </button>
+            <button
+              onClick={() => scrollToSection("registry")}
+              className="hover:underline"
+            >
+              REGISTRY
+            </button>
+          </>
+        );
+      case "Portugal":
+        return (
+          <>
+            <button
+              onClick={() => scrollToSection("location")}
+              className="hover:underline"
+            >
+              LOCATION
+            </button>
+            <button
+              onClick={() => scrollToSection("accommodation")}
+              className="hover:underline"
+            >
+              ACCOMMODATION
+            </button>
+            <button
+              onClick={() => scrollToSection("dress-code")}
+              className="hover:underline whitespace-nowrap"
+            >
+              DRESS CODE
+            </button>
+            <button
+              onClick={() => scrollToSection("registry")}
+              className="hover:underline"
+            >
+              REGISTRY
+            </button>
+          </>
+        );
     }
   };
 
@@ -37,24 +137,7 @@ export default function Header() {
 
         {/* Middle: Menu items */}
         <div className="flex gap-6 text-sm uppercase tracking-wider justify-center">
-          <button
-            onClick={() => scrollToSection("location")}
-            className="hover:underline"
-          >
-            LOCATION
-          </button>
-          <button
-            onClick={() => scrollToSection("asoebi")}
-            className="hover:underline"
-          >
-            ASOEBI
-          </button>
-          <button
-            onClick={() => scrollToSection("registry")}
-            className="hover:underline"
-          >
-            REGISTRY
-          </button>
+          {renderMenuItems()}
         </div>
 
         {/* Right: RSVP button */}

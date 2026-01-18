@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import LagosContent from "@/components/locations/LagosContent";
 import LondonContent from "@/components/locations/LondonContent";
 import PortugalContent from "@/components/locations/PortugalContent";
@@ -25,6 +26,9 @@ export default function MultiLocationContent({
   guest,
   initialLocation,
 }: MultiLocationContentProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   // Determine initial location: use URL param if valid, otherwise first allowed location
   const getInitialLocation = (): Location => {
     if (
@@ -40,6 +44,17 @@ export default function MultiLocationContent({
   const [activeLocation, setActiveLocation] = useState<Location>(
     getInitialLocation()
   );
+
+  // Update URL when location changes
+  useEffect(() => {
+    const code = searchParams.get("code");
+    const params = new URLSearchParams();
+    if (code) {
+      params.set("code", code);
+    }
+    params.set("location", activeLocation);
+    router.replace(`/?${params.toString()}`, { scroll: false });
+  }, [activeLocation, router, searchParams]);
 
   const renderLocationContent = (location: Location) => {
     switch (location) {

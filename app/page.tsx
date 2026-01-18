@@ -5,6 +5,7 @@ import PortugalContent from "@/components/locations/PortugalContent";
 import MultiLocationContent from "@/components/MultiLocationContent";
 import CodeInput from "@/components/CodeInput";
 import Header from "@/components/Header";
+import SingleLocationSync from "@/components/SingleLocationSync";
 import { Guest, Location } from "@/types/rsvp";
 import { fetchGuestByCode } from "@/lib/airtable";
 
@@ -71,20 +72,35 @@ function ContentRenderer({
         name: guest.name,
         allowed_plus_ones: guest.allowed_plus_ones,
       });
-      return <LondonContent inviteCode={code} guest={guest} />;
+      return (
+        <>
+          <SingleLocationSync location="London" code={code} />
+          <LondonContent inviteCode={code} guest={guest} />
+        </>
+      );
     case "Portugal":
       console.log("[ContentRenderer] Rendering PortugalContent with guest:", {
         name: guest.name,
         allowed_plus_ones: guest.allowed_plus_ones,
       });
-      return <PortugalContent inviteCode={code} guest={guest} />;
+      return (
+        <>
+          <SingleLocationSync location="Portugal" code={code} />
+          <PortugalContent inviteCode={code} guest={guest} />
+        </>
+      );
     case "Lagos":
     default:
       console.log("[ContentRenderer] Rendering LagosContent with guest:", {
         name: guest.name,
         allowed_plus_ones: guest.allowed_plus_ones,
       });
-      return <LagosContent inviteCode={code} guest={guest} />;
+      return (
+        <>
+          <SingleLocationSync location="Lagos" code={code} />
+          <LagosContent inviteCode={code} guest={guest} />
+        </>
+      );
   }
 }
 
@@ -101,7 +117,9 @@ export default async function Home({ searchParams }: PageProps) {
   return (
     <main className="min-h-screen">
       {/* Navigation Header */}
-      <Header />
+      <Suspense fallback={<div className="h-[71px]"></div>}>
+        <Header />
+      </Suspense>
 
       {/* Code Input Section (only show if no valid code) */}
       {(!code || !guest) && code !== undefined && (

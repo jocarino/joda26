@@ -1,6 +1,7 @@
 import Countdown from "@/components/Countdown";
 import RSVPForm from "@/components/RSVPForm";
 import HeroSection from "@/components/HeroSection";
+import Registry from "@/components/Registry";
 import { Guest } from "@/types/rsvp";
 
 interface LagosContentProps {
@@ -16,23 +17,11 @@ export default function LagosContent({
 }: LagosContentProps) {
   // Create date in local timezone to avoid timezone issues
   const weddingDate = new Date(2026, 2, 27); // March 27, 2026 (month is 0-indexed, so 2 = March)
-  const images: string[] = [
-    "/images/A-147.jpg",
-    "/images/A-180.jpg",
-    "/images/A-194.jpg",
-    "/images/A-254.jpg",
-    "/images/A-44.jpg",
-    "/images/A-89.jpg",
-  ];
 
   return (
     <div className="min-h-screen space-y-0 gap-0">
       {/* Hero Section */}
-      <HeroSection
-        date="March 27th 2026"
-        images={images}
-        altText="Lagos wedding"
-      />
+      <HeroSection date="March 27th 2026" altText="Lagos wedding" />
 
       {/* Countdown */}
       <Countdown targetDate={weddingDate.getTime()} />
@@ -192,84 +181,7 @@ export default function LagosContent({
           <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
             REGISTRY
           </h2>
-          <div className="text-center">
-            <p className="text-sm text-gray-600 mb-4 text-justify">
-              As we will be travelling back to the UK shortly after the
-              celebration, we will unfortunately be unable to transport physical
-              or boxed gifts.
-            </p>
-            <p className="text-sm text-gray-600 mb-4 text-justify">
-              Your presence at our wedding would mean the world to us, but for
-              guests who wish to honour us with a gift we would appreciate
-              monetary gifts as they will be much easier for us to receive and
-              carry with us.
-            </p>
-            <p className="text-sm text-gray-600 mb-4 text-justify">
-              Kindly find our account details below.Thank you for your love,
-              generosity, and for celebrating this special moment with us.
-            </p>
-
-            <div className="space-y-6 mt-8">
-              {/* Naira Account */}
-              <div className="border-t pt-6">
-                <h4 className="text-lg font-semibold mb-4 text-center">
-                  NAIRA ACCOUNT
-                </h4>
-                <div className="space-y-2 max-w-md mx-auto text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Account No:</span>
-                    <span className="font-semibold">0793202713</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Bank:</span>
-                    <span className="font-semibold">Access Bank</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Name:</span>
-                    <span className="font-semibold">Olaleye Oluwadamola</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Pounds Account */}
-              <div className="border-t pt-6">
-                <h4 className="text-lg font-semibold mb-4 text-center">
-                  POUNDS ACCOUNT
-                </h4>
-                <div className="space-y-2 max-w-md mx-auto text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Account holder name:</span>
-                    <span className="font-semibold">Oluwadamola Olaleye</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Account number:</span>
-                    <span className="font-semibold">60013714</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Sort code:</span>
-                    <span className="font-semibold">20-26-78</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* PayPal */}
-              <div className="border-t pt-6">
-                <h4 className="text-lg font-semibold mb-4 text-center">
-                  PAYPAL
-                </h4>
-                <div className="text-center">
-                  <a
-                    href="https://paypal.me/JVeloso58"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm font-semibold underline inline-block"
-                  >
-                    paypal.me/JVeloso58
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
+          <Registry />
         </div>
       </section>
 
