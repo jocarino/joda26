@@ -31,6 +31,9 @@ export default function HeroSection({
             <div className="text-md md:text-lg uppercase tracking-wider font-medium font-sans text-white drop-shadow-lg">
               {date}
             </div>
+            <div className="text-sm md:text-base tracking-wider font-light font-sans text-white drop-shadow-lg mt-2">
+              #JoDa26
+            </div>
           </div>
         </div>
       </div>
