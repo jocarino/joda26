@@ -94,7 +94,7 @@ export default function Registry({ variant = "default" }: RegistryProps) {
         {/* Portuguese Account */}
         <div className="border-t pt-6">
           <h4 className="text-lg font-semibold mb-4 text-center">
-            PORTUGUESE ACCOUNT
+            EUROS ACCOUNT
           </h4>
           <div className="space-y-2 max-w-md mx-auto text-sm">
             <div className="flex justify-between">
