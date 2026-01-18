@@ -1,9 +1,8 @@
 import Countdown from "@/components/Countdown";
 import RSVPForm from "@/components/RSVPForm";
-import LocationNav from "@/components/LocationNav";
 import HeroSection from "@/components/HeroSection";
 import Registry from "@/components/Registry";
-import { Location, Guest } from "@/types/rsvp";
+import { Guest } from "@/types/rsvp";
 
 interface LondonContentProps {
   inviteCode?: string;
@@ -74,7 +73,7 @@ export default function LondonContent({
           {/* Lunch Location */}
           <div className="mt-16 grid md:grid-cols-3 gap-8 items-center">
             <div className="text-center md:text-left">
-              <p className="text-lg font-semibold mb-2">Lunch Venue</p>
+              <p className="text-lg font-semibold mb-2">Lunch Venue: Cosmo</p>
               <p className="text-sm text-gray-600">Reading, UK</p>
             </div>
             <div className="aspect-video w-full overflow-hidden rounded">
@@ -133,18 +132,6 @@ export default function LondonContent({
         </div>
       </section>
 
-      {/* Dress Code */}
-      <section id="dress-code" className="py-16 px-4 bg-white">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
-            DRESS CODE
-          </h2>
-          <div className="text-center">
-            <p className="text-sm text-gray-600">Dressy casual.</p>
-          </div>
-        </div>
-      </section>
-
       {/* Registry */}
       <section id="registry" className="py-16 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
@@ -180,15 +167,6 @@ export default function LondonContent({
           )}
         </div>
       </section>
-
-      {/* Location Navigation */}
-      {guest && guest.allowed_locations.length > 1 && (
-        <LocationNav
-          currentLocation="London"
-          allowedLocations={guest.allowed_locations}
-          code={inviteCode}
-        />
-      )}
     </div>
   );
 }

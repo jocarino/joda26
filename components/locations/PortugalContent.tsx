@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Countdown from "@/components/Countdown";
 import RSVPForm from "@/components/RSVPForm";
-import LocationNav from "@/components/LocationNav";
 import HeroSection from "@/components/HeroSection";
 import Registry from "@/components/Registry";
 import { Guest } from "@/types/rsvp";
@@ -75,31 +74,31 @@ export default function PortugalContent({
       </section>
 
       {/* Getting There */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4 bg-[#5a6134] text-white">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
             GETTING THERE
           </h2>
           <div className="space-y-4">
             <div>
-              <h3 className="text-lg font-semibold mb-2">Airports</h3>
-              <p className="text-sm text-gray-600">Faro Airport (FAO)</p>
+              <h3 className="text-lg font-semibold mb-2">Airport to Fly In</h3>
+              <p className="text-sm text-white/90">Faro Airport (FAO)</p>
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-2">Transportation</h3>
-              <p className="text-sm text-gray-600 mb-2">
+              <p className="text-sm text-white/90 mb-2">
                 <a
                   href="https://www.faroairport.pt/en/fao/access-parking/getting-to-and-from-the-airport/public-transportation"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm font-semibold text-[#5a6134] underline"
+                  className="text-sm font-semibold text-white underline hover:text-white/80"
                 >
                   Official Airport Transportation information
                 </a>
-                : here you can find taxi transfers to Lagos, bus, trains and
-                others.
+                : here you can find taxi transfers, bus, trains and others
+                transport options to Lagos.
               </p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-white/90">
                 For getting around Lagos, Uber and Bolt are convenient options.
               </p>
             </div>
@@ -119,7 +118,7 @@ export default function PortugalContent({
               <p className="text-sm text-gray-600 mb-4">
                 We have secured special rates at the{" "}
                 <a
-                  href="https://www.boavistaresort.pt/pt/Homepage.aspx"
+                  href="https://www.boavistaresort.pt/en/Homepage.aspx"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm font-semibold text-[#5a6134] underline"
@@ -132,7 +131,10 @@ export default function PortugalContent({
               <div className="gap-1 mt-2">
                 <div className="w-full relative aspect-video rounded shadow-sm overflow-hidden">
                   <p className="text-sm text-gray-600 mb-2">
-                    When you book your stay, please use the code: WEDBC.
+                    When you book your stay, after selecting the dates and
+                    clicking on <strong className="uppercase">Book now</strong>,
+                    please use the code: WEDBC, as shown in the screenshot
+                    below.
                   </p>
                   <p className="text-sm text-gray-600 mb-2">
                     You&apos;ll need to expand the &quot;modify search&quot;.
@@ -163,7 +165,7 @@ export default function PortugalContent({
       </section>
 
       {/* Dress Code */}
-      <section id="dress-code" className="py-16 px-4 bg-white">
+      <section id="dress-code" className="pb-16 pt-0 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
           <h2 className="whitespace-nowrap text-3xl md:text-4xl font-serif mb-8 text-center font-normal">
             DRESS CODE
@@ -214,15 +216,6 @@ export default function PortugalContent({
           )}
         </div>
       </section>
-
-      {/* Location Navigation */}
-      {guest && guest.allowed_locations.length > 1 && (
-        <LocationNav
-          currentLocation="Portugal"
-          allowedLocations={guest.allowed_locations}
-          code={inviteCode}
-        />
-      )}
     </div>
   );
 }

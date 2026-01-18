@@ -74,9 +74,17 @@ export async function PUT(request: NextRequest) {
     };
 
     // Validate required fields
-    if (!rsvp.location || !rsvp.name || !rsvp.phone_number) {
+    if (!rsvp.location || !rsvp.name) {
       return NextResponse.json(
-        { error: "Location, name, and phone number are required" },
+        { error: "Location and name are required" },
+        { status: 400 }
+      );
+    }
+
+    // Phone number is only required for Lagos
+    if (rsvp.location === "Lagos" && !rsvp.phone_number) {
+      return NextResponse.json(
+        { error: "Phone number is required for Lagos location" },
         { status: 400 }
       );
     }
@@ -136,9 +144,17 @@ export async function POST(request: NextRequest) {
         };
 
         // Validate required fields
-        if (!rsvp.location || !rsvp.name || !rsvp.phone_number) {
+        if (!rsvp.location || !rsvp.name) {
           return NextResponse.json(
-            { error: "Location, name, and phone number are required" },
+            { error: "Location and name are required" },
+            { status: 400 }
+          );
+        }
+
+        // Phone number is only required for Lagos
+        if (rsvp.location === "Lagos" && !rsvp.phone_number) {
+          return NextResponse.json(
+            { error: "Phone number is required for Lagos location" },
             { status: 400 }
           );
         }
@@ -178,9 +194,17 @@ export async function POST(request: NextRequest) {
     };
 
     // Validate required fields
-    if (!rsvp.location || !rsvp.name || !rsvp.phone_number) {
+    if (!rsvp.location || !rsvp.name) {
       return NextResponse.json(
-        { error: "Location, name, and phone number are required" },
+        { error: "Location and name are required" },
+        { status: 400 }
+      );
+    }
+
+    // Phone number is only required for Lagos
+    if (rsvp.location === "Lagos" && !rsvp.phone_number) {
+      return NextResponse.json(
+        { error: "Phone number is required for Lagos location" },
         { status: 400 }
       );
     }

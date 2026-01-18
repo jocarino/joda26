@@ -136,6 +136,30 @@ export default function RSVPForm({
       return;
     }
 
+    // Validate dietary restrictions for Portugal location
+    if (
+      location === "Portugal" &&
+      !simple &&
+      !formData.dietary_restrictions.trim()
+    ) {
+      setError(
+        "Please provide information about food allergies or dietary restrictions"
+      );
+      return;
+    }
+
+    // Validate all guest names are filled when plus ones are selected
+    if (
+      !simple &&
+      formData.plus_one_count > 0 &&
+      formData.plus_one_names.some(
+        (name, index) => index < formData.plus_one_count && !name.trim()
+      )
+    ) {
+      setError("Please provide names for all guests");
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -389,7 +413,7 @@ export default function RSVPForm({
           {formData.plus_one_count > 0 && (
             <div className="space-y-4">
               <label className="block text-sm uppercase tracking-wider mb-2">
-                Guest Names
+                Guest Names *
               </label>
               {Array.from({ length: formData.plus_one_count }, (_, i) => (
                 <div key={i}>
@@ -397,7 +421,7 @@ export default function RSVPForm({
                     htmlFor={`plus_one_${i}`}
                     className="block text-xs uppercase tracking-wider mb-1 text-gray-600"
                   >
-                    Guest {i + 1}
+                    Guest {i + 1} *
                   </label>
                   <input
                     id={`plus_one_${i}`}
@@ -408,6 +432,7 @@ export default function RSVPForm({
                       newNames[i] = e.target.value;
                       setFormData({ ...formData, plus_one_names: newNames });
                     }}
+                    required
                     className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:border-black transition-colors"
                     placeholder="Enter name"
                   />
@@ -425,7 +450,7 @@ export default function RSVPForm({
               htmlFor="dietary_restrictions"
               className="block text-sm uppercase tracking-wider mb-2"
             >
-              Food Allergies or Dietary Restrictions
+              Food Allergies or Dietary Restrictions *
             </label>
             <textarea
               id="dietary_restrictions"
@@ -437,25 +462,10 @@ export default function RSVPForm({
                 })
               }
               rows={3}
+              required
               className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:border-black transition-colors"
               placeholder="Please let us know about any dietary requirements..."
             />
-          </div>
-
-          <div>
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={formData.visa_required}
-                onChange={(e) =>
-                  setFormData({ ...formData, visa_required: e.target.checked })
-                }
-                className="w-4 h-4 border-gray-300"
-              />
-              <span className="text-sm uppercase tracking-wider">
-                I require a visa
-              </span>
-            </label>
           </div>
         </>
       )}
@@ -473,7 +483,14 @@ export default function RSVPForm({
           formData.attending === null ||
           (!simple &&
             (!formData.name ||
-              (location === "Lagos" && !formData.phone_number)))
+              (location === "Lagos" && !formData.phone_number) ||
+              (location === "Portugal" &&
+                !formData.dietary_restrictions.trim()) ||
+              (formData.plus_one_count > 0 &&
+                formData.plus_one_names.some(
+                  (name, index) =>
+                    index < formData.plus_one_count && !name.trim()
+                ))))
         }
         className="w-full px-6 py-3 border border-[#5a6134] hover:bg-[#5a6134] hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider text-sm"
       >

@@ -23,6 +23,13 @@ export default function Header() {
     }
   }, [searchParams]);
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element && headerRef.current) {
@@ -75,12 +82,6 @@ export default function Header() {
               LOCATION
             </button>
             <button
-              onClick={() => scrollToSection("dress-code")}
-              className="hover:underline whitespace-nowrap"
-            >
-              DRESS CODE
-            </button>
-            <button
               onClick={() => scrollToSection("registry")}
               className="hover:underline"
             >
@@ -128,11 +129,17 @@ export default function Header() {
       <div className="max-w-6xl mx-auto grid grid-cols-3 items-center">
         {/* Left: Logo */}
         <div className="flex items-center">
-          <img
-            src="/images/JoDa Logo.svg"
-            alt="Damola & João"
-            className="h-8 md:h-10 w-auto"
-          />
+          <button
+            onClick={scrollToTop}
+            className="cursor-pointer hover:opacity-80 transition-opacity"
+            aria-label="Scroll to top"
+          >
+            <img
+              src="/images/JoDa Logo.svg"
+              alt="Damola & João"
+              className="h-8 md:h-10 w-auto"
+            />
+          </button>
         </div>
 
         {/* Middle: Menu items */}
