@@ -71,7 +71,7 @@ export default function MultiLocationContent({
     <div className="min-h-screen">
       {/* Location Tabs */}
       {allowedLocations.length > 1 && (
-        <section className="sticky top-[71px] z-40 bg-white border-b border-gray-200 shadow-sm">
+        <section className="sticky top-[57px] md:top-[73px] z-40 bg-white border-b border-gray-200 shadow-sm">
           <div className="max-w-6xl mx-auto px-4">
             <div className="flex justify-center gap-2 md:gap-4 overflow-x-auto">
               {allowedLocations.map((location) => (

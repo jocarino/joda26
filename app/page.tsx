@@ -117,7 +117,7 @@ export default async function Home({ searchParams }: PageProps) {
   return (
     <main className="min-h-screen">
       {/* Navigation Header */}
-      <Suspense fallback={<div className="h-[71px]"></div>}>
+      <Suspense fallback={<div className="h-[57px] md:h-[73px]"></div>}>
         <Header />
       </Suspense>
 
