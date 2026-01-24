@@ -15,6 +15,8 @@ export default function AdminPage() {
   const [generatingCode, setGeneratingCode] = useState<string | null>(null);
   const [generatingAllCodes, setGeneratingAllCodes] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedGuestLocations, setSelectedGuestLocations] = useState<Location[]>([]);
 
   const showToast = (message: string) => {
     setToast(message);
@@ -161,7 +163,7 @@ export default function AdminPage() {
   };
 
   const generateAllMissingCodes = async () => {
-    const guestsWithoutCodes = guests.filter((guest) => !guest.invite_code);
+    const guestsWithoutCodes = filteredGuests.filter((guest) => !guest.invite_code);
     
     if (guestsWithoutCodes.length === 0) {
       alert("All guests already have codes!");
@@ -243,6 +245,42 @@ export default function AdminPage() {
   // RSVPs are now filtered server-side via /api/admin/rsvps?location=...
   const filteredRSVPs = rsvps;
 
+  // Normalize string by removing accents/diacritics
+  const normalizeString = (str: string): string => {
+    return str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+  };
+
+  // Filter guests by search query and locations
+  const filteredGuests = guests.filter((guest) => {
+    // Filter by search query (name) - normalized to handle accents
+    if (searchQuery && !normalizeString(guest.name).includes(normalizeString(searchQuery))) {
+      return false;
+    }
+    
+    // Filter by locations
+    if (selectedGuestLocations.length > 0) {
+      const hasMatchingLocation = selectedGuestLocations.some((location) =>
+        guest.allowed_locations.includes(location)
+      );
+      if (!hasMatchingLocation) {
+        return false;
+      }
+    }
+    
+    return true;
+  });
+
+  const toggleGuestLocation = (location: Location) => {
+    setSelectedGuestLocations((prev) =>
+      prev.includes(location)
+        ? prev.filter((l) => l !== location)
+        : [...prev, location]
+    );
+  };
+
   if (!authenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -295,7 +333,7 @@ export default function AdminPage() {
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-serif">Guests</h2>
             <div className="flex gap-2">
-              {guests.filter((g) => !g.invite_code).length > 0 && (
+              {filteredGuests.filter((g) => !g.invite_code).length > 0 && (
                 <button
                   onClick={generateAllMissingCodes}
                   disabled={generatingAllCodes}
@@ -303,15 +341,50 @@ export default function AdminPage() {
                 >
                   {generatingAllCodes
                     ? "Generating..."
-                    : `Generate All Codes (${guests.filter((g) => !g.invite_code).length})`}
+                    : `Generate All Codes (${filteredGuests.filter((g) => !g.invite_code).length})`}
                 </button>
               )}
               <button
-                onClick={() => exportToCSV(guests, 'guests.csv')}
+                onClick={() => exportToCSV(filteredGuests, 'guests.csv')}
                 className="px-4 py-2 border border-black hover:bg-black hover:text-white transition-colors uppercase text-sm"
               >
                 Export CSV
               </button>
+            </div>
+          </div>
+          
+          {/* Search and Filter Controls */}
+          <div className="mb-4 flex gap-4 items-center">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by name..."
+              className="px-4 py-2 border border-gray-300 focus:outline-none focus:border-black flex-1 max-w-md"
+            />
+            <div className="flex gap-4 items-center">
+              <span className="text-sm text-gray-600">Filter by location:</span>
+              <div className="flex gap-2">
+                {(["Lagos", "London", "Portugal"] as Location[]).map((location) => (
+                  <label key={location} className="flex items-center gap-1 text-sm cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={selectedGuestLocations.includes(location)}
+                      onChange={() => toggleGuestLocation(location)}
+                      className="cursor-pointer"
+                    />
+                    <span>{location}</span>
+                  </label>
+                ))}
+              </div>
+              {selectedGuestLocations.length > 0 && (
+                <button
+                  onClick={() => setSelectedGuestLocations([])}
+                  className="text-xs text-gray-600 hover:text-black underline"
+                >
+                  Clear
+                </button>
+              )}
             </div>
           </div>
           {loading ? (
@@ -322,20 +395,27 @@ export default function AdminPage() {
                 <thead>
                   <tr className="border-b border-gray-200">
                     <th className="text-left py-2">Name</th>
-                    <th className="text-left py-2">Email</th>
                     <th className="text-left py-2">Code</th>
                     <th className="text-left py-2">Locations</th>
                     <th className="text-left py-2">Link</th>
-                    <th className="text-left py-2">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {guests.map((guest) => (
+                  {filteredGuests.map((guest) => (
                     <tr key={guest.id} className="border-b border-gray-100">
                       <td className="py-2">{guest.name}</td>
-                      <td className="py-2">{guest.email || "-"}</td>
                       <td className="py-2 font-mono">
-                        {guest.invite_code || "-"}
+                        {guest.invite_code || (
+                          <button
+                            onClick={() => generateCode(guest.id)}
+                            disabled={generatingCode === guest.id}
+                            className="text-blue-600 hover:underline text-xs disabled:opacity-50"
+                          >
+                            {generatingCode === guest.id
+                              ? "Generating..."
+                              : "Generate Code"}
+                          </button>
+                        )}
                       </td>
                       <td className="py-2">
                         {guest.allowed_locations.join(", ") || "-"}
@@ -352,23 +432,13 @@ export default function AdminPage() {
                           "-"
                         )}
                       </td>
-                      <td className="py-2">
-                        {!guest.invite_code && (
-                          <button
-                            onClick={() => generateCode(guest.id)}
-                            disabled={generatingCode === guest.id}
-                            className="text-blue-600 hover:underline text-xs disabled:opacity-50"
-                          >
-                            {generatingCode === guest.id
-                              ? "Generating..."
-                              : "Generate Code"}
-                          </button>
-                        )}
-                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+              {filteredGuests.length === 0 && (
+                <p className="text-center py-8 text-gray-500">No guests found</p>
+              )}
             </div>
           )}
         </section>
