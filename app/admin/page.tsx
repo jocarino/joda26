@@ -13,6 +13,7 @@ export default function AdminPage() {
     "all"
   );
   const [generatingCode, setGeneratingCode] = useState<string | null>(null);
+  const [generatingAllCodes, setGeneratingAllCodes] = useState(false);
 
   useEffect(() => {
     // Check if already authenticated (stored in sessionStorage)
@@ -153,6 +154,59 @@ export default function AdminPage() {
     }
   };
 
+  const generateAllMissingCodes = async () => {
+    const guestsWithoutCodes = guests.filter((guest) => !guest.invite_code);
+    
+    if (guestsWithoutCodes.length === 0) {
+      alert("All guests already have codes!");
+      return;
+    }
+
+    const confirmed = confirm(
+      `Generate codes for ${guestsWithoutCodes.length} guest(s)?`
+    );
+    if (!confirmed) return;
+
+    setGeneratingAllCodes(true);
+    const storedPassword = sessionStorage.getItem("admin_password") || "";
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const guest of guestsWithoutCodes) {
+      try {
+        const response = await fetch("/api/generate-code", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${storedPassword}`,
+          },
+          body: JSON.stringify({ recordId: guest.id }),
+        });
+
+        if (response.ok) {
+          successCount++;
+        } else {
+          failCount++;
+          console.error(`Failed to generate code for ${guest.name}`);
+        }
+      } catch (error) {
+        failCount++;
+        console.error(`Error generating code for ${guest.name}:`, error);
+      }
+    }
+
+    await loadData();
+    setGeneratingAllCodes(false);
+
+    if (failCount === 0) {
+      alert(`Successfully generated ${successCount} code(s)!`);
+    } else {
+      alert(
+        `Generated ${successCount} code(s), ${failCount} failed. Check console for details.`
+      );
+    }
+  };
+
   const copyLink = (link: string) => {
     navigator.clipboard.writeText(link);
     alert("Link copied to clipboard!");
@@ -228,12 +282,25 @@ export default function AdminPage() {
         <section className="bg-white p-6 mb-8 border border-gray-200">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-serif">Guests</h2>
-            <button
-              onClick={() => exportToCSV(guests, 'guests.csv')}
-              className="px-4 py-2 border border-black hover:bg-black hover:text-white transition-colors uppercase text-sm"
-            >
-              Export CSV
-            </button>
+            <div className="flex gap-2">
+              {guests.filter((g) => !g.invite_code).length > 0 && (
+                <button
+                  onClick={generateAllMissingCodes}
+                  disabled={generatingAllCodes}
+                  className="px-4 py-2 bg-black text-white hover:bg-gray-800 transition-colors uppercase text-sm disabled:opacity-50"
+                >
+                  {generatingAllCodes
+                    ? "Generating..."
+                    : `Generate All Codes (${guests.filter((g) => !g.invite_code).length})`}
+                </button>
+              )}
+              <button
+                onClick={() => exportToCSV(guests, 'guests.csv')}
+                className="px-4 py-2 border border-black hover:bg-black hover:text-white transition-colors uppercase text-sm"
+              >
+                Export CSV
+              </button>
+            </div>
           </div>
           {loading ? (
             <p>Loading...</p>
