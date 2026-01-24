@@ -16,7 +16,9 @@ export default function AdminPage() {
   const [generatingAllCodes, setGeneratingAllCodes] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [rsvpSearchQuery, setRsvpSearchQuery] = useState("");
   const [selectedGuestLocations, setSelectedGuestLocations] = useState<Location[]>([]);
+  const [activeTab, setActiveTab] = useState<"guests" | "rsvps">("guests");
 
   const showToast = (message: string) => {
     setToast(message);
@@ -242,9 +244,6 @@ export default function AdminPage() {
     window.URL.revokeObjectURL(url);
   };
 
-  // RSVPs are now filtered server-side via /api/admin/rsvps?location=...
-  const filteredRSVPs = rsvps;
-
   // Normalize string by removing accents/diacritics
   const normalizeString = (str: string): string => {
     return str
@@ -252,6 +251,15 @@ export default function AdminPage() {
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase();
   };
+
+  // RSVPs are filtered server-side by location, then client-side by search query
+  const filteredRSVPs = rsvps.filter((rsvp) => {
+    // Filter by search query (name) - normalized to handle accents
+    if (rsvpSearchQuery && !normalizeString(rsvp.name).includes(normalizeString(rsvpSearchQuery))) {
+      return false;
+    }
+    return true;
+  });
 
   // Filter guests by search query and locations
   const filteredGuests = guests.filter((guest) => {
@@ -328,8 +336,33 @@ export default function AdminPage() {
           </button>
         </div>
 
+        {/* Tabs */}
+        <div className="flex gap-2 mb-6 border-b border-gray-300">
+          <button
+            onClick={() => setActiveTab("guests")}
+            className={`px-6 py-3 text-sm uppercase tracking-wider transition-colors ${
+              activeTab === "guests"
+                ? "border-b-2 border-black font-medium"
+                : "text-gray-600 hover:text-black"
+            }`}
+          >
+            Guests
+          </button>
+          <button
+            onClick={() => setActiveTab("rsvps")}
+            className={`px-6 py-3 text-sm uppercase tracking-wider transition-colors ${
+              activeTab === "rsvps"
+                ? "border-b-2 border-black font-medium"
+                : "text-gray-600 hover:text-black"
+            }`}
+          >
+            RSVPs
+          </button>
+        </div>
+
         {/* Guests Section */}
-        <section className="bg-white p-6 mb-8 border border-gray-200">
+        {activeTab === "guests" && (
+        <section className="bg-white p-6 border border-gray-200">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-serif">Guests</h2>
             <div className="flex gap-2">
@@ -442,8 +475,10 @@ export default function AdminPage() {
             </div>
           )}
         </section>
+        )}
 
         {/* RSVPs Section */}
+        {activeTab === "rsvps" && (
         <section className="bg-white p-6 border border-gray-200">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-serif">RSVPs</h2>
@@ -470,6 +505,18 @@ export default function AdminPage() {
               </button>
             </div>
           </div>
+          
+          {/* Search Control */}
+          <div className="mb-4">
+            <input
+              type="text"
+              value={rsvpSearchQuery}
+              onChange={(e) => setRsvpSearchQuery(e.target.value)}
+              placeholder="Search by name..."
+              className="px-4 py-2 border border-gray-300 focus:outline-none focus:border-black max-w-md"
+            />
+          </div>
+          
           {loading ? (
             <p>Loading...</p>
           ) : (
@@ -516,6 +563,7 @@ export default function AdminPage() {
             </div>
           )}
         </section>
+        )}
       </div>
     </div>
   );
