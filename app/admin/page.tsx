@@ -14,6 +14,12 @@ export default function AdminPage() {
   );
   const [generatingCode, setGeneratingCode] = useState<string | null>(null);
   const [generatingAllCodes, setGeneratingAllCodes] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+
+  const showToast = (message: string) => {
+    setToast(message);
+    setTimeout(() => setToast(null), 2000);
+  };
 
   useEffect(() => {
     // Check if already authenticated (stored in sessionStorage)
@@ -209,7 +215,7 @@ export default function AdminPage() {
 
   const copyLink = (link: string) => {
     navigator.clipboard.writeText(link);
-    alert("Link copied to clipboard!");
+    showToast("Link copied!");
   };
 
   const exportToCSV = (data: any[], filename: string) => {
@@ -263,6 +269,12 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
+      {/* Toast notification */}
+      {toast && (
+        <div className="fixed bottom-4 right-4 bg-green-600 text-white px-4 py-2 text-sm animate-fade-in z-50">
+          {toast}
+        </div>
+      )}
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-serif">Admin Dashboard</h1>
