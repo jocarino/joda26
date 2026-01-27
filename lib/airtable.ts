@@ -30,6 +30,7 @@ async function airtableRequest(endpoint: string, options: RequestInit = {}) {
 
   const response = await fetch(url, {
     ...options,
+    cache: 'no-store', // Disable caching to always get fresh data from Airtable
     headers: {
       Authorization: `Bearer ${AIRTABLE_PAT}`,
       "Content-Type": "application/json",
